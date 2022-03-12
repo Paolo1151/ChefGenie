@@ -8,9 +8,6 @@ from .forms import LoginForm
 user_index = 0
 error_message = ''
 
-def change_user_index(number):
-    user_index = number
-
 # Create your views here
 def account_view(request):
     if user_index != 0:
