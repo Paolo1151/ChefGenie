@@ -77,6 +77,10 @@ hr{
     color: #FFF;
 }
 
+.form h2{
+    color: red;
+}
+
 #username_field, #password_field{
     width: 30%;
     padding: 12px 20px;
@@ -91,17 +95,22 @@ hr{
     text-align: center;
 }
 
-button[type=submit] {
-    width: 30%;
+button {
+    width: 10%;
     background-color: #bf9270;
     color: white;
     padding: 14px 20px;
-    margin: 8px 0;
+    margin: 8px 5px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
   }
-  
-  button[type=submit]:hover {
+
+  button a{
+      text-decoration: none;
+      color: #FFF;
+  }
+
+  button:hover {
     background-color: #b98760;
   }
