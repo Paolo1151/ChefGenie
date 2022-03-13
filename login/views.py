@@ -4,38 +4,57 @@ from django.http import HttpResponse
 from .models import User
 from .forms import LoginForm
 
-#variables
-
-# Create your views here
 def account_view(request):
-    if request.session['user_index'] != 0:
-        user = User.objects.get(id=request.session['user_index'])
-        context = {
-            'user_index': request.session['user_index'],
-            'current_user': user
-        }
-    else:
-        context = {
-            'user_index': request.session['user_index']
-        }
-    return render(request, "account/account.html", context)
+    '''
+    Defines the View of the Account Page after login.
+    Only Accessible if user_index and user is populated.
+
+    Parameters
+    -----------
+    request: a request object from django
+
+    Returns
+    -----------
+    rendered: A Rendered Page based on a context
+    '''
+    return render(
+        request, "account/account.html", {
+        'user_index': request.session['user_index'],
+        'user': User.objects.get(id=request.session['user_index'])
+    })
 
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username_field']
-        password = request.POST['password_field']
+    '''
+    Defines the view of the login page.
 
-        for i in User.objects.all():
-            user = User.objects.get(id=i.pk)
-            if user.username == username and user.password == password:
-                request.session['user_index'] = i.pk
+    Parameters
+    -----------
+    request: a request object from django
+
+    Returns
+    -----------
+    rendered: A Rendered Page Object based on the context
+    '''
+
+    context = {'error_message': ''}
+
+    if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+
+        if login_form.is_valid():
+            user = User.objects.all().get(
+                        username=login_form.cleaned_data.get('username'),
+                        password=login_form.cleaned_data.get('password')
+                    )
+
+            if user:
+                request.session['user_index'] = user.pk
+
+                print(User.objects.get(id=request.session['user_index']))
+
                 return redirect('account')
+
         request.session['error_message'] = 'invalid username or password'
-    else:
-        request.session['error_message'] = ''
-    context = {
-        'error_message': request.session['error_message'],
-        'user_index': request.session['user_index'],
-    }
+
     return render(request, "login/login.html", context)
 
