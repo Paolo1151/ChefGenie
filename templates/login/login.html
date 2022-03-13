@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 <center>
     <form class="form" method="post">
@@ -9,8 +8,8 @@
             <h2>{{ error_message }}</h2>
         {% endif %}
         <h1>login</h1>
-        <input type="text" id="username_field" name="username" placeholder="username" Required> <br> <br>
-        <input type="password" id="password_field" name="password" placeholder="password" Required> <br> <br>
+        <input type="text" class="input_field" name="username" placeholder="username" Required> <br> <br>
+        <input type="password" class="input_field" name="password" placeholder="password" Required> <br> <br>
         
         <button type="submit">login</button><button type="button"><a href="signup">signup</a></button>
     </form>

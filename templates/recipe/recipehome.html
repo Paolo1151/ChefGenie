@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+    <form action="/recipe/recommend" method="post">
+        {% csrf_token %}
+        <h1>What are you craving today?</h1>
+        <input type="text" class="input_field" name="search_term" Required>
+        <button type="submit">Search</button>
+    </form>
+</center>
+{% endblock content %}

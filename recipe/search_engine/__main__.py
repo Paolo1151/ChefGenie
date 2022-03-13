@@ -4,12 +4,12 @@ import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ''))
 
-from .nlpprocessor import NLPProcessor
+from .nlpmodel import NLPModel
 
-nlpp = NLPProcessor()
+nlpp = NLPModel(os.path.join(os.path.dirname(__file__), 'test', 'test.sqlite3'), 'recipe')
 
 def main():
-    parser = argparse.ArgumentParser(description = 'NLP Processor CLI')
+    parser = argparse.ArgumentParser(description = 'NLP Model CLI')
     parser.add_argument('--function', help='function', type=str)
     parser.add_argument('--text', help='text', type=str)
     parser.add_argument('--text1', help='text1', type=str)
@@ -45,10 +45,17 @@ def main():
         print(f'Result: {result}')
     elif function == 'recommend':
         print(f'Input: {text}')
-        result = nlpp.recommend(text, test_objects)
+        result = nlpp.recommend(text)
         print('Result: ')
         for i, (name, score) in enumerate(result):
             print(f'{i+1}. {name} : {score}')
+    elif function == 'save':
+        nlpp.save_model()
+        print('Successfully Saved Model!')
+    elif function == 'load':
+        test_model = NLPModel.load_model()
+        print('Successfully Loaded Model!')
+
 
 
 if __name__ == '__main__':

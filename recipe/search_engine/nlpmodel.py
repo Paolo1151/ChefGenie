@@ -1,16 +1,35 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from .recipe import Recipe
+
 import pandas as pd
 import numpy as np
 
 import spacy
+import joblib
+import os
+
+# To remove once sqlite db is deprecated
+import sqlite3
 
 class NLPModel:
-    def __init__(self):
+    def __init__(self, db_path, pool_table):
         '''Create an NLP Processor with an internal nlp object for nlp operations'''
-        self.nlp = spacy.load('en_core_web_lg')
+        self.nlp = spacy.load('en_core_web_md')
 
-    def recommend(self, prompt, pool):
+        self.recipes = []
+        # Generate Pool of Recipes
+        with sqlite3.connect(db_path) as conn:
+            for params in conn.execute(f'SELECT * FROM {pool_table}'):
+                tags = params[-1].split()
+                recipe = Recipe(*params[1:-1], tags=tags)
+                self.recipes.append(recipe)
+
+
+        print('Initialized NLPModel...')
+
+
+    def generate_recommendations(self, prompt):
         '''
         Attributes:
         -----------
@@ -24,15 +43,15 @@ class NLPModel:
         sorted_recommendations : List
             Ordered list of recommendations based on score
         '''
+
         processed_text = self.process(prompt)
 
-        scores = {}
-        for name, tags in pool.items():
-            scores[name] = self.compare(processed_text, tags)
-        
-        score_list = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        for recipe in self.recipes:
+            recipe.set_similarity(self.compare(processed_text, recipe.get_tags()))
 
-        return score_list
+        self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
+
+        return self.serialize_recipes()
 
     def process(self, text):
         '''
@@ -88,3 +107,16 @@ class NLPModel:
         doc2 = self.nlp(text2)
 
         return doc1.similarity(doc2)
+
+    @staticmethod
+    def load_model():
+        return joblib.load(os.path.join(os.path.dirname(__file__), 'models', 'nlpmodel.joblib'))
+
+    def save_model(self):
+        joblib.dump(self, os.path.join(os.path.dirname(__file__), 'models', 'nlpmodel.joblib'))
+
+    def serialize_recipes(self):
+        serialized_recipes = []
+        for recipe in self.recipes:
+            serialized_recipes.append(recipe.__dict__)
+        return serialized_recipes

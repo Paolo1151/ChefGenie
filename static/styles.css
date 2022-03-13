@@ -81,7 +81,7 @@ hr{
     color: red;
 }
 
-#username_field, #password_field{
+.input_field{
     width: 30%;
     padding: 12px 20px;
     margin: 0 auto;
@@ -114,3 +114,7 @@ button {
   button:hover {
     background-color: #b98760;
   }
+
+#searchprompt {
+    color: #fff;
+}
