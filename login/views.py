@@ -49,9 +49,6 @@ def login_view(request):
 
             if user:
                 request.session['user_index'] = user.pk
-
-                print(User.objects.get(id=request.session['user_index']))
-
                 return redirect('account')
 
         request.session['error_message'] = 'invalid username or password'
