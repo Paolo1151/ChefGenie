@@ -47,7 +47,7 @@ def login_view(request):
                             username=login_form.cleaned_data.get('username'),
                             password=login_form.cleaned_data.get('password')
                         )
-            except queryset.model.DoesNotExist:
+            except User.DoesNotExist:
                 user = None
 
             if user:
