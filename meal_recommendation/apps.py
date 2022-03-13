@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MealRecommendationEngineConfig(AppConfig):
+class MealRecommendationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'meal_recommendation_engine'
+    name = 'meal_recommendation'
