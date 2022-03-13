@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     #Own apps
     'login',
+    'meal_recommendation_engine'
 ]
 
 MIDDLEWARE = [

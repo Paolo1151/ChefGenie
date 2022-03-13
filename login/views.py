@@ -42,10 +42,13 @@ def login_view(request):
         login_form = LoginForm(request.POST)
 
         if login_form.is_valid():
-            user = User.objects.all().get(
-                        username=login_form.cleaned_data.get('username'),
-                        password=login_form.cleaned_data.get('password')
-                    )
+            try:
+                user = User.objects.get(
+                            username=login_form.cleaned_data.get('username'),
+                            password=login_form.cleaned_data.get('password')
+                        )
+            except queryset.model.DoesNotExist:
+                user = None
 
             if user:
                 request.session['user_index'] = user.pk
