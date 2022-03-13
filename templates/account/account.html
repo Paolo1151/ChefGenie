@@ -5,24 +5,14 @@
         <title>{{user.username|capfirst}}'s Profile</title>
     {% endblock %}
 
-    {% block nav_elements %}
-    {% if user_index != 0 %}
-        <li><a class="active">account</a></li>
-    {% else %}
-        <li><a class="active">login</a></li>
-    {% endif %}
-        <li><a href="">analytics</a></li>
-        <li><a href="">pantry</a></li>
-        <li><a href="">recipes</a></li>
-        <li><a href="/">home</a></li>
-    {% endblock %}
-
     {% block content %}
         <article>
             <header>
                 <h1>account</h1>
             </header>
+
             <hr>
+            
             <h2>username</h2>
             <p>{{user.username}}</p>
             <h2>weight (kg)</h2>
@@ -35,6 +25,7 @@
             <p>{{user.weight_goal}}</p>
             <h2>calorie goal</h2>
             <p>{{user.calorie_goal}}</p>
+
         </article>
     {% endblock %}
 {% endif %}

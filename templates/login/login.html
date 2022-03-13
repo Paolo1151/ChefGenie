@@ -1,16 +1,5 @@
 {% extends 'base.html' %}
 
-{% block nav_elements %}
-    {% if user_index != 0 %}
-        <li><a class="active" href="account">account</a></li>
-    {% else %}
-        <li><a class="active" href="login">login</a></li>
-    {% endif %}
-    <li><a href="">analytics</a></li>
-    <li><a href="">pantry</a></li>
-    <li><a href="">recipes</a></li>
-    <li><a href="/">home</a></li>
-{% endblock %}
 
 {% block content %}
 <center>

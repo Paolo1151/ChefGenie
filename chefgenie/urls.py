@@ -21,5 +21,5 @@ from login.views import account_view, login_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('login.urls')),
-    path('', include('meal_recommendation.urls'))
+    path('', include('recipe.urls'))
 ]
