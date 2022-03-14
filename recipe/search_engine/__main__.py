@@ -45,9 +45,11 @@ def main():
         print(f'Result: {result}')
     elif function == 'recommend':
         print(f'Input: {text}')
-        result = nlpp.recommend(text)
+        result = nlpp.generate_recommendations(text)
         print('Result: ')
-        for i, (name, score) in enumerate(result):
+        for i, recipe in enumerate(result):
+            name = recipe['name']
+            score = recipe['similarity']
             print(f'{i+1}. {name} : {score}')
     elif function == 'save':
         nlpp.save_model()

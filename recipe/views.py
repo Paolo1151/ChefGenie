@@ -15,9 +15,11 @@ def recipe_recommend(request):
     form = SearchForm(request.POST)
 
     if form.is_valid():
-        prompt = form.cleaned_data.get('search_term')
+        prompt = form.cleaned_data.get('search_term')  
         request.session['prompt'] = prompt
         request.session['recommendations'] = model.generate_recommendations(prompt)
+
+    print(request.session['recommendations'])
 
     return redirect('recipe_results')
 
