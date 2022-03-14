@@ -81,7 +81,7 @@ hr{
     color: red;
 }
 
-#username_field, #password_field, #password_field_confirm, #email_field{
+.input_field{
     width: 30%;
     padding: 12px 20px;
     margin: 0 auto;
