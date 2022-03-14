@@ -21,13 +21,13 @@ class NLPModel:
         # Generate Pool of Recipes
         with sqlite3.connect(db_path) as conn:
             for params in conn.execute(f'SELECT * FROM {pool_table}'):
+                print(params)
                 tags = params[-1].split()
                 recipe = Recipe(*params[1:-1], tags=tags)
                 self.recipes.append(recipe)
 
 
         print('Initialized NLPModel...')
-
 
     def generate_recommendations(self, prompt):
         '''
