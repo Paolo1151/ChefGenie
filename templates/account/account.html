@@ -2,19 +2,7 @@
 
 {% if user_index != 0 %}
     {% block title %}
-        <title>{{current_user.username|capfirst}}'s Profile</title>
-    {% endblock %}
-
-    {% block nav_elements %}
-    {% if user_index != 0 %}
-        <li><a class="active">account</a></li>
-    {% else %}
-        <li><a class="active">login</a></li>
-    {% endif %}
-        <li><a href="">analytics</a></li>
-        <li><a href="">pantry</a></li>
-        <li><a href="">recipes</a></li>
-        <li><a href="/">home</a></li>
+        <title>{{user.username|capfirst}}'s Profile</title>
     {% endblock %}
 
     {% block content %}
@@ -22,19 +10,22 @@
             <header>
                 <h1>account</h1>
             </header>
+
             <hr>
+            
             <h2>username</h2>
-            <p>{{current_user.username}}</p>
+            <p>{{user.username}}</p>
             <h2>weight (kg)</h2>
-            <p>{{current_user.weight}} kg</p>
+            <p>{{user.weight}} kg</p>
             <h2>height (cm)</h2>
-            <p>{{current_user.height}} cm</p>
+            <p>{{user.height}} cm</p>
             <h2>bmi</h2>
-            <p>{{current_user.bmi|floatformat:2}}</p>
+            <p>{{user.bmi|floatformat:2}}</p>
             <h2>weight goal</h2>
-            <p>{{current_user.weight_goal}}</p>
+            <p>{{user.weight_goal}}</p>
             <h2>calorie goal</h2>
-            <p>{{current_user.calorie_goal}}</p>
+            <p>{{user.calorie_goal}}</p>
+
         </article>
     {% endblock %}
 {% endif %}

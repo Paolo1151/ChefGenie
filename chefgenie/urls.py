@@ -21,8 +21,6 @@ from signup.views import signup_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_view, name='login'),
-    path('account', account_view, name='account'),
-    path('signup', signup_view, name='signup'),
-    path('', include('meal_recommendation_engine.urls'))
+    path('', include('login.urls')),
+    path('', include('recipe.urls'))
 ]

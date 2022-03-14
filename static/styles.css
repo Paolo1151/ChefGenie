@@ -114,3 +114,7 @@ button {
   button:hover {
     background-color: #b98760;
   }
+
+#searchprompt {
+    color: #fff;
+}
