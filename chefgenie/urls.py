@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from login.views import account_view, login_view
+from signup.views import signup_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', login_view, name='login'),
     path('account', account_view, name='account'),
+    path('signup', signup_view, name='signup'),
     path('', include('meal_recommendation_engine.urls'))
 ]

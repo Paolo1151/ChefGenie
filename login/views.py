@@ -31,8 +31,8 @@ def login_view(request):
                 request.session['user_index'] = i.pk
                 return redirect('account')
         request.session['error_message'] = 'invalid username or password'
-    else:
-        request.session['error_message'] = ''
+    #else:
+        #request.session['error_message'] = ''
     context = {
         'error_message': request.session['error_message'],
         'user_index': request.session['user_index'],

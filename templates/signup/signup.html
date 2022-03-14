@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block nav_elements %}
+    <li><a class="active" href="/">login</a></li>
+    <li><a href="">analytics</a></li>
+    <li><a href="">pantry</a></li>
+    <li><a href="">recipes</a></li>
+    <li><a href="/">home</a></li>
+{% endblock %}
+
+{% block content %}
+<center>
+    <form class="form" method="post">
+        {% csrf_token %}
+        {% if error_message != '' %}
+            <h2>{{ error_message }}</h2>
+        {% endif %}
+        <h1>signup</h1>
+        <input type="email" id="email_field" name="email_field" placeholder="email" Required> <br> <br>
+        <input type="text" id="username_field" name="username_field" placeholder="username" Required> <br> <br>
+        <input type="password" id="password_field" name="password_field" placeholder="password" Required> <br> <br>
+        <input type="password" id="password_field_confirm" name="password_field_confirm" placeholder="confirm password" Required> <br> <br>
+
+        <button type="submit">submit</button>
+    </form>
+</center>
+{% endblock %}
