@@ -49,8 +49,6 @@ class NLPModel:
         for recipe in self.recipes:
             recipe.set_similarity(self.compare(processed_text, recipe.get_tags()))
 
-
-
         self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
 
         return self.serialize_recipes()

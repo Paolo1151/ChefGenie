@@ -19,8 +19,6 @@ def recipe_recommend(request):
         request.session['prompt'] = prompt
         request.session['recommendations'] = model.generate_recommendations(prompt)
 
-    print(request.session['recommendations'])
-
     return redirect('recipe_results')
 
 def recipe_results(request):
