@@ -9,7 +9,7 @@ def validate_signup(request_post):
         return 1
     elif User.objects.all().filter(username=request_post['username']).exists():
         return 2
-    elif User.objects.all().filter(email_address=request_post['password_confirm']).exists():
+    elif User.objects.all().filter(email_address=request_post['email_address']).exists():
         return 3
     else:
         return 0
