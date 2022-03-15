@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% if request.session.user_index != 0 %}
+    {% block title %}
+        <title>{{ user.username|capfirst }}'s Profile</title>
+    {% endblock %}
+
+    {% block content %}
+        <article>
+            <header>
+                <h1>account</h1>
+            </header>
+
+            <hr>
+            
+            <h2>username</h2>
+            <p>{{user.username}}</p>
+            <h2>weight (kg)</h2>
+            <p>{{user.weight}} kg</p>
+            <h2>height (cm)</h2>
+            <p>{{user.height}} cm</p>
+            <h2>bmi</h2>
+            <p>{{user.bmi|floatformat:2}}</p>
+            <h2>weight goal</h2>
+            <p>{{user.weight_goal}}</p>
+            <h2>calorie goal</h2>
+            <p>{{user.calorie_goal}}</p>
+
+        </article>
+    {% endblock %}
+{% endif %}

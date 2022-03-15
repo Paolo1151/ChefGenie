@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}
+    <title>Chef Genie</title>
+    {% endblock %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <nav>
+        <ul>
+            {% if user_index != 0 %}
+                <li><a class="active" href="/account">account</a></li>
+            {% else %}
+                <li><a class="active" href="/login">login</a></li>
+            {% endif %}
+            <li><a href="">analytics</a></li>
+            <li><a href="">pantry</a></li>
+            <li><a href="/recipe">recipes</a></li>
+            <li><a href="/">home</a></li>
+        </ul>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

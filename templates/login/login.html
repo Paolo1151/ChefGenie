@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+    <form class="form" method="post">
+        {% csrf_token %}
+            
+        {% if message != '' %}
+            <h2>{{ message }}</h2>
+        {% endif %}
+        
+        <h1>login</h1>
+        <input type="text" class="input_field" name="username" placeholder="username" Required> <br> <br>
+        <input type="password" class="input_field" name="password" placeholder="password" Required> <br> <br>
+        
+        <button type="submit">login</button><button onclick="location.href='/signup'" href="signup">signup</button>
+    </form>
+</center>
+{% endblock %}
