@@ -30,10 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,10 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #Own apps
+    # Created Applications
     'login',
-    'meal_recommendation_engine',
-    'pantry'
+    'pantry',
+    'recipe',
 ]
 
 MIDDLEWARE = [
