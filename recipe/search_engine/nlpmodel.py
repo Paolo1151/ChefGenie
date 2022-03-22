@@ -22,8 +22,9 @@ class NLPModel:
         with sqlite3.connect(db_path) as conn:
             for params in conn.execute(f'SELECT * FROM {pool_table}'):
                 print(params)
-                tags = params[-1].split()
-                recipe = Recipe(*params[1:-1], tags=tags)
+                tags = params[-2].split()
+                steps = params[-1].split()
+                recipe = Recipe(*params[1:-2], tags=tags, steps=steps)
                 self.recipes.append(recipe)
 
 

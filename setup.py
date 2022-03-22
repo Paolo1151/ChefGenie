@@ -14,9 +14,9 @@ def install(package=None, requirements_install=False):
 
 def install_packages():
     if platform.system() == 'Windows':
-        os.system(".\\devenv\\Scripts\\activate && pip install -r requirements.txt && python -m spacy download en_core_web_md")
+        os.system(".\\devenv\\Scripts\\activate && pip install -r requirements.txt && python3 -m spacy download en_core_web_md")
     else:
-        os.system("source devenv/bin/activate && pip install -r requirements.txt && python -m spacy download en_core_web_md")
+        os.system("source devenv/bin/activate && pip install -r requirements.txt && python3 -m spacy download en_core_web_md")
 
 def call_module(module, *args):
     subprocess.check_call([sys.executable, '-m', module] + list(args))
@@ -28,7 +28,7 @@ def print_message(message):
 
 def main():
     os.system('cls')
-    os.system('python -m pip install --upgrade pip')
+    os.system('python3 -m pip install --upgrade pip')
     print_message("Starting Creation of Dev Virtual Env!")
     install('virtualenv')
     call_module('virtualenv', 'devenv')
