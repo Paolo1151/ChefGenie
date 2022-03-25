@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('login.urls')),
-    path('', include('meal_recommendation_engine.urls')),
+    path('', include('recipe.urls')),
     path('', include('pantry.urls'))
 ]
 

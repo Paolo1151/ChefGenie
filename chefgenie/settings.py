@@ -91,9 +91,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'chefgenie',
-        'USER' : 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost'
+        'USER' : config('USER'),
+        'PASSWORD': config('PASSWORD'),
     }
 }
 

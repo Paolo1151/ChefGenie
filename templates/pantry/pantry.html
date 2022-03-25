@@ -3,7 +3,7 @@
 {% block nav_elements %}
     <li><a href="">account</a></li>
     <li><a href="">analytics</a></li>
-    <liclass="active"><a href="">pantry</a></li>
+    <li class="active"><a href="">pantry</a></li>
     <li><a href="">recipes</a></li>
     <li ><a href="">home</a></li>
 {% endblock %}
@@ -11,12 +11,10 @@
 {% block content %}
 
 <body>
-        <form action ='pantry' method ='POST' name = "add" value = 'add'>
+        <form action ='pantry/add' method ='POST' enctype="multipart/form-data">
             {% csrf_token %}
-            <input type= 'file' name='pantry_image'> <br>
-            <input type = 'text' name = 'pantry_name' placeholder = 'Input ingredient'><br>
-            <input type= 'number' name = 'pantry_quantity' placeholder = 'Input Quantity'><br>
-            <input type= 'submit' value = 'add' name = 'add' >
+            {{ add_form }}
+            <input type="submit" value="Submit">
         </form>
         
         <div style = 'display: flex;  
@@ -33,20 +31,8 @@
                 <h5 style = "display:inline;">Quantity: {{a.amount}}</h5>
                 <br>
                 <section style = "display:inline-block;">
-
-                    <form action = 'pantry' method ='POST' id = 'delete' style = "display:inline-block;" > 
-                        {% csrf_token %}
-                        <input type="hidden" value= "{{a.pk}}" name = "pk">
-                        <button type="submit"  value = 'delete' name = 'delete' >Delete Item</button>
-                    </form>
-
-                    <form action = 'pantry' method ='POST' id = 'quantity_add' style = "display:inline-block;"> 
-                        {% csrf_token %}
-                        <input type="hidden" value= "{{a.pk}}" name = "pk">
-                        <input type="hidden" value= "{{a.amount}}" name = "amount">
-
-                        <button id = "quantity_add" type="submit"  value = 'quantity_add' name = 'quantity_add' >Add Quantity</button>
-                    </form>
+                    <button type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
+                    <button type="submit" onclick="location.href = '/pantry/qadd/{{a.id}}'">Add 1</button>
                 </section>
             </section>
         {% endfor %}

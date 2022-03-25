@@ -1,9 +1,10 @@
-from django.shortcuts import render
-from .models import Ingredients
-# Create your views here.
+from django.shortcuts import render, redirect
 
-def pantry_view(request):
-	pantry = Ingredients.objects.all()
+from .models import Ingredients
+from .forms import AddIngredientForm
+
+
+def pantry_gallery_view(request):
 	'''
     Defines the view of the pantry page.
 
@@ -15,26 +16,74 @@ def pantry_view(request):
     -----------
     rendered: A Rendered Page Object based on the html
     '''
-	if request.method == 'POST':
-		if 'add' in request.POST:
-			pantry_image = request.POST['pantry_image']
-			pantry_name = request.POST['pantry_name']
-			pantry_quantity= request.POST['pantry_quantity']
-			
-			insert_pantry = Ingredients(img = pantry_image, name=pantry_name, amount=pantry_quantity)
-			insert_pantry.save()
-		elif 'delete' in request.POST:
-			pantry.filter(id=request.POST['pk']).delete()
-		elif 'quantity_add' in request.POST:
-			# to_be_added = pantry.objects.get(pk=request.POST['pk'])
-			# to_be_added.amount += 
-			# to_be_added.save()
-			# pantry.filter(id=request.POST['pk']).update(amount = int(request.POST['amount']) + 1)
-			to_be_added = Ingredients.objects.filter(id=request.POST['pk'])
-			to_be_added.update(amount = int(request.POST['amount']) + 1)
-			
+	return render(request, 'pantry/pantry.html', {
+		'pantry': Ingredients.objects.all(),
+		'add_form': AddIngredientForm()
+	})
 
-	return render(request, 'pantry/pantry.html', {'pantry': pantry})
+
+def pantry_add(request):
+	'''
+	Defines the Adding of a new unique pantry entry
+
+	Parameters
+	----------
+	request: a request object from django
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+	form = AddIngredientForm(request.POST, request.FILES)
+	if form.is_valid():
+		new_ingr = Ingredients(
+			img = form.cleaned_data['img'],
+			name = form.cleaned_data['name'],
+			amount = form.cleaned_data['amount']
+		)
+		new_ingr.save()
+	return redirect('pantry_home')
+
+
+def pantry_delete(request, id):
+	'''
+	Defines the Deletion of a specific pantry entity
+
+	Parameters
+	----------
+	request: Django.request 
+		a request object from django
+	id : int
+		the id of the object concerned
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+	to_delete_obj = Ingredients.objects.get(id=id)
+	to_delete_obj.delete()
+	return redirect('pantry_home')
+
+
+def pantry_quantity_add(request, id):
+	'''
+	Defines the Deletion of a specific pantry entity
+
+	Parameters
+	----------
+	request: Django.request 
+		a request object from django
+	id : int
+		the id of the object concerned
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+	to_update = Ingredients.objects.get(id=id)
+	to_update.amount += 1
+	to_update.save()
+	return redirect('pantry_home')
 
 
 
