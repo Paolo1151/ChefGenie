@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from .recipe import Recipe
+from . import utility
 
 import pandas as pd
 import numpy as np
@@ -8,17 +9,16 @@ import numpy as np
 import spacy
 import joblib
 import os
-
-# To remove once sqlite db is deprecated
-import sqlite3
+import psycopg2
 
 class NLPModel:
-    def __init__(self, db_path, pool_table):
+    def __init__(self, pool_table):
         '''Create an NLP Processor with an internal nlp object for nlp operations'''
         self.nlp = spacy.load('en_core_web_md')
 
         self.recipes = []
         # Generate Pool of Recipes
+<<<<<<< HEAD
         with sqlite3.connect(db_path) as conn:
             for params in conn.execute(f'SELECT * FROM {pool_table}'):
                 print(params)
@@ -27,6 +27,18 @@ class NLPModel:
                 recipe = Recipe(*params[1:-2], tags=tags, steps=steps)
                 self.recipes.append(recipe)
 
+=======
+        try:
+            with psycopg2.connect(utility.get_connection_string()) as conn:
+                with conn.cursor() as curs:
+                    curs.execute(f'SELECT * FROM {pool_table};')
+                    for params in curs:
+                        tags = params[-1].split()
+                        recipe = Recipe(*params[1:-1], tags=tags)
+                        self.recipes.append(recipe)
+        except psycopg2.errors.UndefinedTable:
+            print('Skipped Population of Recipes...')
+>>>>>>> b0a955773e2319dd5a3272c61993dd0886db22fd
 
         print('Initialized NLPModel...')
 
