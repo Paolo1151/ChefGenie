@@ -12,7 +12,7 @@ import os
 import psycopg2
 
 class NLPModel:
-    def __init__(self, db_path, pool_table):
+    def __init__(self, pool_table):
         '''Create an NLP Processor with an internal nlp object for nlp operations'''
         self.nlp = spacy.load('en_core_web_md')
 
