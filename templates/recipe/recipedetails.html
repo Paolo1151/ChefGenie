@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ recipe.name }}</h1>
+    {% for tag in recipe_tags %}
+        <h2>{{ tag }}</h2>
+    {% endfor %}
+    {% for step in recipe_steps %}
+        <h2>{{ step }}</h2>
+    {% endfor %}
+{% endblock %}

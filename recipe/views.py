@@ -27,7 +27,14 @@ def recipe_results(request):
     else:
         return redirect('recipe_home')
 
-
+def recipe_details(request, pk):
+    recipe = Recipe.objects.get(id=pk)
+    recipe_tags = list(recipe.tags.split(" "))
+    recipe_steps = list(recipe.steps.split(" | "))
+    return render(
+        request, 'recipe/recipedetails.html',
+        {'recipe': recipe, 'recipe_tags': recipe_tags, 'recipe_steps': recipe_steps}
+    )
 
 
 
