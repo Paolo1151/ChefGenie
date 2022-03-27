@@ -1,11 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{ recipe.name }}</h1>
-    {% for tag in recipe_tags %}
-        <h2>{{ tag }}</h2>
-    {% endfor %}
-    {% for step in recipe_steps %}
-        <h2>{{ step }}</h2>
-    {% endfor %}
+    <style>
+        .tags {
+            display: flex;
+        }
+        .tag {
+            border-radius: 25px;
+            padding: 8px 10px;
+            margin: 5px;
+            font-size: 15px;
+            color: white;
+        }
+        .tag:nth-of-type(3n-2) { background: #6495ED; }
+        .tag:nth-of-type(3n-1) { background: #E97451; }
+        .tag:nth-of-type(3n) { background: #50C878; }
+    </style>
+
+    <article>
+        <h1>{{ recipe.name }}</h1>
+        <h3>Tags: </h3>
+        <div class="tags">
+            {% for tag in recipe_tags %}
+                <div class="tag">{{ tag }}</div>
+            {% endfor %}
+        </div>
+        <h3>Ingredients: </h3>
+        <ul>
+            {% for ingredient in recipe_ingredients %}
+                {% if ingredient.required_amount > 1.0 %}
+                    <li>{{ ingredient.required_amount }} {{ ingredient.ingredient.unit }}s {{ ingredient.ingredient.name }}</li>
+                {% else %}
+                <li>{{ ingredient.required_amount }} {{ ingredient.ingredient.unit }} {{ ingredient.ingredient.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <h3>Directions: </h3>
+        <ol>
+            {% for step in recipe_steps %}
+                <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+    </article>
 {% endblock %}
