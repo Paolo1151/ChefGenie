@@ -3,6 +3,7 @@ from django.db import models
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     unit = models.CharField(max_length=10)
+    calories = models.FloatField()
 
 class Recipe(models.Model):
     name = models.CharField(max_length=150)
