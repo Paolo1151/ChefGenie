@@ -2,33 +2,30 @@
 
 {% block content %}
     <center>
-        <form action="/recipe/recommend" method="post">
-            {% csrf_token %}
-            <input type="text" class="input_field" name="search_term" placeholder="What are you craving?" Required>
-            <button type="submit">Search</button>
-        </form>
-
-        <h4 id="searchprompt">
-            Search Results based on: <u>{{ request.session.prompt }}</u>
-        </h4>
+        <button type="button" onclick="location.href = '/recipe';">Return to Search</button>
     </center>
 
     
+    {% if request.session.IsEmpty %}
+        <h4 style="color: white;">
+            No Results Found
+        </h4>
+    {% else %}
+        {% for recipe in request.session.recommendations %}
+            <article>
+                <header>
+                    <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+                </header>
 
-    {% for recipe in request.session.recommendations %}
-        <article>
-            <header>
-                <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
-            </header>
-
-            <table>
-                <tr>
-                    {% for tag in recipe.tags %}
-                        <td>{{ tag }}</td>
-                    {% endfor %}
-                </tr>
-            </table>
-            <!-- More Descriptors to be added in the future -->
-        </article>
-    {% endfor %}
-{% endblock %}
+                <table>
+                    <tr>
+                        {% for tag in recipe.tags %}
+                            <td>{{ tag }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+                <!-- More Descriptors to be added in the future -->
+            </article>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

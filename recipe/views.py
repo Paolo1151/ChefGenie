@@ -1,24 +1,40 @@
 from django.shortcuts import render, reverse, redirect
 
-from chefgenie.settings import BASE_DIR
+from chefgenie.settings import BASE_DIR, NLP_MODEL
 
 from .forms import SearchForm
 from .models import Recipe, Requirement
 from .search_engine.nlpmodel import NLPModel
+from .search_engine.filters import SearchConfig
+
+
+import psycopg2
 
 def recipe_home(request):
     return render(request, 'recipe/recipehome.html')
 
 
 def recipe_recommend(request):
-    model = NLPModel.load_model()
+    request.session['IsEmpty'] = False
     form = SearchForm(request.POST)
 
+    # Generate Search Config
+    if 'filter_enabled' in request.POST:
+        search_config = SearchConfig.create_new(request.POST)
+    else:
+        search_config = None
+    
+    # Check if the Search Term is Valid
     if form.is_valid():
-        prompt = form.cleaned_data.get('search_term')  
-        request.session['prompt'] = prompt
-        request.session['recommendations'] = model.generate_recommendations(prompt)
+        try:
+            prompt = form.cleaned_data.get('search_term')  
+            request.session['prompt'] = prompt
+            request.session['recommendations'] = NLP_MODEL.generate_recommendations(prompt, search_config)
+        except psycopg2.ProgrammingError:
+            request.session['recommendations'] = []
+            request.session['IsEmpty'] = True
 
+    # Redirect to the Recipe Results
     return redirect('recipe_results')
 
 

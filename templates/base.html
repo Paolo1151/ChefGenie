@@ -4,7 +4,7 @@
 <head>
     {% block title %}
     <title>Chef Genie</title>
-    {% endblock %}
+    {% endblock title %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 </head>
@@ -22,6 +22,7 @@
             <li><a href="/">home</a></li>
         </ul>
     </nav>
-    {% block content %}{% endblock %}
+    {% block content %}{% endblock content %}
+    {% block scripts %}{% endblock scripts %}
 </body>
 </html>

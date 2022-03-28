@@ -1,5 +1,3 @@
-
-
 class Recipe:
     def __init__(self, id, name, tags, *args, **kwargs):
         '''
@@ -46,4 +44,3 @@ class Recipe:
 
     def __str__(self):
         return f"{name}: {tags}"
-
