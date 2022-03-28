@@ -21,11 +21,13 @@ def recipe_recommend(request):
 
     return redirect('recipe_results')
 
+
 def recipe_results(request):
     if 'recommendations' in request.session:
         return render(request, 'recipe/reciperesults.html')
     else:
         return redirect('recipe_home')
+
 
 def recipe_details(request, pk):
     recipe = Recipe.objects.get(id=pk)
@@ -33,9 +35,12 @@ def recipe_details(request, pk):
     recipe_ingredients = Requirement.objects.select_related('recipe').select_related('ingredient').filter(recipe_id = recipe.id)
     recipe_steps = list(recipe.steps.split(" | "))
     return render(
-        request, 'recipe/recipedetails.html',
-        {'recipe': recipe, 'recipe_tags': recipe_tags,
-        'recipe_ingredients': recipe_ingredients, 'recipe_steps': recipe_steps}
+        request, 'recipe/recipedetails.html', {
+            'recipe': recipe,
+            'recipe_tags': recipe_tags,
+            'recipe_ingredients': recipe_ingredients,
+            'recipe_steps': recipe_steps
+        }
     )
 
 
