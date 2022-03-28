@@ -23,8 +23,8 @@ class NLPModel:
                 with conn.cursor() as curs:
                     curs.execute(f'SELECT * FROM {pool_table};')
                     for params in curs:
-                        tags = params[-1].split()
-                        recipe = Recipe(*params[1:-1], tags=tags)
+                        tags = params[-2].split()
+                        recipe = Recipe(*params[:-2], tags=tags)
                         self.recipes.append(recipe)
         except psycopg2.errors.UndefinedTable:
             print('Skipped Population of Recipes...')

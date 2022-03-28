@@ -1,20 +1,24 @@
 
 
 class Recipe:
-    def __init__(self, name, tags, *args, **kwargs):
+    def __init__(self, id, name, tags, *args, **kwargs):
         '''
         Parameters
         ----------
+        id: int
+            ID of the Recipe
+
         name : str
             Name of the Recipe
 
         tags : set (str)
             String Tags associated with the object
         '''
+        self.id = id
         self.name = name
         self.tags = tags
         self.similarity = 0
-
+    
     def get_name(self):
         return self.name
 
