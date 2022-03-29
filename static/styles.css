@@ -81,7 +81,7 @@ hr{
     color: red;
 }
 
-.input_field{
+.input_field, .ingredient_filter, .calorie_filter{
     width: 30%;
     padding: 12px 20px;
     margin: 0 auto;
@@ -117,4 +117,23 @@ button {
 
 #searchprompt {
     color: #fff;
+}
+
+.search_interface{
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.5);
+    display: block;
+}
+
+#add_filter_button, #remove_filter_button{
+    width: 40%;
+    background-color: #bf9270;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 5px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
 }
