@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'login',
     'pantry',
     'recipe',
+    'analytics',
 ]
 
 MIDDLEWARE = [
