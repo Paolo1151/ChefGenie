@@ -58,8 +58,9 @@ class SearchConfig(SearchFilter):
 
             if self.ingredient_filters:
                 temp_query = temp_query.replace("[ingredient_filters]", 'WHERE\n[ingredient_filters]')
-                for ingredient_filter in self.ingredient_filters:
-                    temp_query = temp_query.replace("[ingredient_filters]", f'    {ingredient_filter.to_sql()}\n[ingredient_filters]')
+                temp_query = temp_query.replace("[ingredient_filters]", f'    {self.ingredient_filters[0].to_sql()}\n[ingredient_filters]')
+                for ingredient_filter in self.ingredient_filters[1:]:
+                    temp_query = temp_query.replace("[ingredient_filters]", f'    AND {ingredient_filter.to_sql()}\n[ingredient_filters]')
 
             table_creation_query = temp_query.replace('[ingredient_filters]\n', '')
 

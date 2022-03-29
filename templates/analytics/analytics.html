@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
 {% block nav_elements %}
-    <li><a href="">account</a></li>
-    <li><a href="">analytics</a></li>
-    <li class="active"><a href="">pantry</a></li>
-    <li><a href="">recipes</a></li>
-    <li ><a href="">home</a></li>
+    <li><a href="/account">account</a></li>
+    <li class="active"><a href="/analytics">analytics</a></li>
+    <li><a href="/pantry">pantry</a></li>
+    <li><a href="/recipes">recipes</a></li>
+    <li ><a href="/home">home</a></li>
 {% endblock %}
 
 {% block content %}
 
 <body>
-    <div style="align-content: center; text-align:center">
+    <div style="align-content: center; text-align:center;">
         <form action ='analytics/add' method ='POST' enctype="multipart/form-data">
             {% csrf_token %}
             {{ add_form }}
@@ -20,7 +20,7 @@
     </div>
         <p style="text-align: center; font-size:130%; color: white">It is the {% now "jS \o\f F" %} </p>
         <div>
-        <table style= 'border: 1px solid; width: 100%; text-align:center'>
+        <table style= 'border: 1px solid; width: 100%; text-align:center; background: rgba(255,255,255,0.5);'>
             <thead>
                 <th>Meals</th>
                 <th>Amount</th>
@@ -41,7 +41,7 @@
         <div style="text-align:center"><button type="submit" onclick="location.href = '/analytics/deleteall'">Reset Day</button></div>
         <!-- <div style="text-align:center"><button type="submit" onclick="location.href = '/analytics/calculatecalories'">Calculate Calories</button></div> -->
         <div style="text-align:center">
-            <h1 style="font-size:130%;"> 
+            <h1 style="font-size:130%; color:white;"> 
                 {% if calorie_goal_status > 0 %}
                 You need  {{ calorie_goal_status }} calories more to reach your goal. 
                 {% elif calorie_goal == 0 %}
