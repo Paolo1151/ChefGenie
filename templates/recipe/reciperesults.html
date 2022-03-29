@@ -3,13 +3,17 @@
 {% block content %}
     <center>
         <button type="button" onclick="location.href = '/recipe';">Return to Search</button>
+        <h4 id="searchprompt">
+            Search Results based on: <u>{{ request.session.prompt }}</u>
+        </h4>
     </center>
 
-    
-    {% if request.session.IsEmpty %}
-        <h4 style="color: white;">
-            No Results Found
-        </h4>
+    {% if not request.session.recommendations %}
+        <center>
+            <h4 style="color: white;">
+                No Results Found
+            </h4>
+        </center>
     {% else %}
         {% for recipe in request.session.recommendations %}
             <article>

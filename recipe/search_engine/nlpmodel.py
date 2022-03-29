@@ -112,6 +112,8 @@ class NLPModel:
 
         self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
 
+        
+
         return self.serialize_recipes()
 
     @staticmethod

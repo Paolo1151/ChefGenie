@@ -15,7 +15,6 @@ def recipe_home(request):
 
 
 def recipe_recommend(request):
-    request.session['IsEmpty'] = False
     form = SearchForm(request.POST)
 
     # Generate Search Config
@@ -23,16 +22,12 @@ def recipe_recommend(request):
         search_config = SearchConfig.create_new(request.POST)
     else:
         search_config = None
-    
+
     # Check if the Search Term is Valid
     if form.is_valid():
-        try:
             prompt = form.cleaned_data.get('search_term')  
             request.session['prompt'] = prompt
             request.session['recommendations'] = NLP_MODEL.generate_recommendations(prompt, search_config)
-        except psycopg2.ProgrammingError:
-            request.session['recommendations'] = []
-            request.session['IsEmpty'] = True
 
     # Redirect to the Recipe Results
     return redirect('recipe_results')
