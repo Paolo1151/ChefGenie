@@ -39,7 +39,7 @@ def recipe_results(request):
     else:
         return redirect('recipe_home')
 
-
+# Displaying individual Recipe pages
 def recipe_details(request, pk):
     recipe = Recipe.objects.get(id=pk)
     recipe_tags = list(recipe.tags.split(" "))
@@ -53,7 +53,3 @@ def recipe_details(request, pk):
             'recipe_steps': recipe_steps
         }
     )
-
-
-
-
