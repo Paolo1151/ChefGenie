@@ -96,7 +96,7 @@ hr{
 }
 
 button {
-    width: 10%;
+    display: inline-block;
     background-color: #bf9270;
     color: white;
     padding: 14px 20px;
@@ -156,7 +156,7 @@ button {
 
 .tag:nth-of-type(3n) { background: #50C878; }
 
-.review-form > *{
+.review-form > * {
     display: flex;
     margin: 10px 0px;
 }
@@ -194,10 +194,31 @@ button {
     margin-right: 0.55rem;
 }
 
-input:checked ~ label, label:hover, label:hover ~ label {
+input:checked ~ label, label:hover, label:hover ~ label{
     color: #ffb503;
 }
 
 input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~ label {
     color: #cc9000;
 }
+
+hr.solid {
+    border-top: 3px rounded #bbb;
+    margin: 30px 25px 0 0;
+}
+
+.review { margin-bottom: 10px; }
+
+.review-header { display: flex; }
+
+.review-header > * { margin: 0 0 0 5px; }
+
+.review-username { font-weight: bold; }
+
+.stars > i { color: #ffb503; }
+
+.review-comment {
+    margin: 2px 0 0 5px;
+}
+
+.login-now:link { text-decoration: none; }

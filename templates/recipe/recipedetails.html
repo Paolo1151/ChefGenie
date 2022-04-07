@@ -28,11 +28,10 @@
     </article>
 
     <article>
-        <h3>User Reviews</h3>
-        <form action="" method="POST">
+        <form action="{% url 'submit_review' recipe.id %}" method="POST">
             {% csrf_token %}
-            <h4>Leave a review</h4>
             <div class="review-form">
+                <h4>Leave a review</h4>
                 <div class="rating">
                     Rating:&nbsp;
                     <input type="radio" name="rating" id="rating-10" value="5" required><label for="rating-10" title="5"></label>
@@ -48,8 +47,48 @@
                 </div>
                 <p>Comment:</p>
                 <textarea name="comment" rows="4" cols="50"></textarea>
-                <input type="submit" value="Post Review">
+                {% if user.is_authenticated %}
+                <button type="submit">post review</button>
+                {% else %}
+                <p>You must be logged in to post a review.&nbsp;
+                    <span><a href={% url 'login' %} class="login-now">Login now.</a></span>
+                </p>
+                {% endif %}
             </div>
         </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <hr class="solid">
+
+        <div class="reviews">
+            <h3>User Reviews</h3>
+            {% for review in reviews %}
+                <div class="review">
+                    <div class="review-header">
+                        <div class="review-username">{{ review.user__user__username }}</div>
+                        <p>•</p>
+                        <span class="stars">
+                            <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="review-comment">{{ review.comment }}</div>
+                </div>
+            {% endfor %}
+        </div>
     </article>
+
+    <script>
+        var message = document.getElementById("message");
+        setTimeout(function(){ 
+            message.style.display = "none";
+        }, 5000);
+    </script>
 {% endblock content %}
