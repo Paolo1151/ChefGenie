@@ -11,7 +11,7 @@ def account_view(request):
         account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
         context = {'account': account, 'user': user}
-        return render(request, "login/account.html", context)
+        return render(request, 'login/account.html', context)
     else:
         return redirect('login')
 
@@ -27,8 +27,7 @@ def login_view(request):
             auth.login(request, user)
             return redirect('account')
         else:
-            message = "Invalid login credentials."
-            return redirect('login')
+            message = 'invalid username or password'
     else:
         message = ''
     form = LoginForm()
@@ -54,10 +53,12 @@ def signup_view(request):
             user_account = UserAccount()
             user_account.user_id = user.id
             user_account.save()
-            message = "Account created!"
+            message = 'Account created!'
             return redirect('/')
+        elif(form.cleaned_data['password'] != form.cleaned_data['confirm_password']):
+                message = 'Passwords do not match'
         else:
-            message = "Signup is invalid!"
+            message = 'Username or Email already taken!'
     else:
         message = ''
         form = SignupForm()
