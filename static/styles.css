@@ -95,7 +95,7 @@ hr{
     text-align: center;
 }
 
-button {
+button, #quantity_add {
     width: 10%;
     background-color: #bf9270;
     color: white;
