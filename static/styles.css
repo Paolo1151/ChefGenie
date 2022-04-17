@@ -96,7 +96,7 @@ hr{
 }
 
 button {
-    width: 10%;
+    display: inline-block;
     background-color: #bf9270;
     color: white;
     padding: 14px 20px;
@@ -137,3 +137,88 @@ button {
     border-radius: 20px;
     cursor: pointer;
 }
+
+.tags {
+    display: flex;
+}
+
+.tag {
+    border-radius: 25px;
+    padding: 8px 10px;
+    margin: 5px;
+    font-size: 15px;
+    color: white;
+}
+
+.tag:nth-of-type(3n-2) { background: #6495ED; }
+
+.tag:nth-of-type(3n-1) { background: #E97451; }
+
+.tag:nth-of-type(3n) { background: #50C878; }
+
+.review-form > * {
+    display: flex;
+    margin: 10px 0px;
+}
+
+.rating {
+    display: inline-block;
+    border: 0;
+}
+
+.rating > input {
+    display: none;
+}
+
+.rating > label {
+    float: right;
+}
+
+.rating > label:before {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding: .3rem .2rem;
+    margin-right:0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    font-weight: 900;
+    content: "\f005";
+}
+
+.rating .half:before {
+    content: "\f005";
+    position: absolute;
+    padding-right: 0;
+    width: 0.55rem;
+    overflow: hidden;
+    margin-right: 0.55rem;
+}
+
+input:checked ~ label, label:hover, label:hover ~ label{
+    color: #ffb503;
+}
+
+input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~ label {
+    color: #cc9000;
+}
+
+hr.solid {
+    border-top: 3px rounded #bbb;
+    margin: 30px 25px 0 0;
+}
+
+.review { margin-bottom: 10px; }
+
+.review-header { display: flex; }
+
+.review-header > * { margin: 0 0 0 5px; }
+
+.review-username { font-weight: bold; }
+
+.stars > i { color: #ffb503; }
+
+.review-comment {
+    margin: 2px 0 0 5px;
+}
+
+.login-now:link { text-decoration: none; }

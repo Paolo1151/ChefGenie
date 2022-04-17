@@ -1,9 +1,10 @@
 from django.shortcuts import render, reverse, redirect
+from django.contrib import messages
 
 from chefgenie.settings import BASE_DIR, NLP_MODEL
 
-from .forms import SearchForm
-from .models import Recipe, Requirement
+from .forms import SearchForm, ReviewForm
+from .models import Recipe, Requirement, RecipeReview
 from .search_engine.nlpmodel import NLPModel
 from .search_engine.filters import SearchConfig
 
@@ -11,10 +12,32 @@ from .search_engine.filters import SearchConfig
 import psycopg2
 
 def recipe_home(request):
+    '''
+    Render the Home page of the Recipes HTML
+    
+    request : Django Request object
+        Request is assumed to be a GET protocol 
+    '''
     return render(request, 'recipe/recipehome.html')
 
 
 def recipe_recommend(request):
+    '''
+    Render the Recipe Recommendation based on the prompt.
+
+    Parameters
+    ----------
+    request : django request object
+        Contains
+            - prompt : a text from the search bar
+            - filters: parameters for filters to be parsed in
+                the creation of a search config
+        
+    Returns
+    -----------
+    a redirect to the recipe_results url
+
+    '''
     form = SearchForm(request.POST)
 
     # Generate Search Config
@@ -34,26 +57,71 @@ def recipe_recommend(request):
 
 
 def recipe_results(request):
+    '''Render the recommendations if it exists'''
     if 'recommendations' in request.session:
         return render(request, 'recipe/reciperesults.html')
     else:
         return redirect('recipe_home')
 
-
+# Displaying individual Recipe pages
 def recipe_details(request, pk):
+    '''
+    Display the details of the clicked recipe
+
+    Parameters
+    ----------
+    pk : int
+        The id of the related object that is to be shown
+
+    Returns
+    ----------
+    a rendered webpage that has the details of the recipe
+
+    '''
     recipe = Recipe.objects.get(id=pk)
-    recipe_tags = list(recipe.tags.split(" "))
-    recipe_ingredients = Requirement.objects.select_related('recipe').select_related('ingredient').filter(recipe_id = recipe.id)
-    recipe_steps = list(recipe.steps.split(" | "))
     return render(
         request, 'recipe/recipedetails.html', {
             'recipe': recipe,
-            'recipe_tags': recipe_tags,
-            'recipe_ingredients': recipe_ingredients,
-            'recipe_steps': recipe_steps
+            'recipe_tags': recipe.tags.split(" "),
+            'recipe_ingredients': Requirement.objects.select_related('recipe').select_related('ingredient').filter(recipe_id=recipe.id),
+            'recipe_steps': recipe.steps.split(" | "),
+            'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__user__username', 'rating', 'comment')
         }
     )
 
+def submit_review(request, recipe_id):
+    '''
+    Submit a user review about the chosen recipe
 
+    Parameters
+    ----------
+    recipe_id : int
+        the id of the recipe that is to be reviewed
 
+    Returns
+    --------
+    a redirect to the previous page
+    
+    '''
+    url = request.META.get('HTTP_REFERER')
 
+    if request.method == 'POST':
+        try:
+            review = RecipeReview.objects.get(user__id=request.user.id, recipe__id=recipe_id)
+            form = ReviewForm(request.POST, instance=review)
+            form.save()
+            
+            messages.success(request, 'Thank you! Your review has been updated.')
+        except RecipeReview.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                data = RecipeReview()
+                data.rating = form.cleaned_data['rating']
+                data.comment = form.cleaned_data['comment']
+                data.recipe_id = recipe_id
+                data.user_id = request.user.id
+                data.save()
+
+                messages.success(request, 'Thank you! Your review has been posted.')
+    
+    return redirect(url)

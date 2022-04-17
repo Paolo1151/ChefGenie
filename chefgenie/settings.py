@@ -79,6 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chefgenie.wsgi.application'
 
+AUTH_USER_MODEL = 'login.Account'
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -98,8 +100,6 @@ DATABASES = {
         'PASSWORD': config('PASSWORD'),
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

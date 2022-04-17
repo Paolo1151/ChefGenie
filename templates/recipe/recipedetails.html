@@ -1,22 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style>
-        .tags {
-            display: flex;
-        }
-        .tag {
-            border-radius: 25px;
-            padding: 8px 10px;
-            margin: 5px;
-            font-size: 15px;
-            color: white;
-        }
-        .tag:nth-of-type(3n-2) { background: #6495ED; }
-        .tag:nth-of-type(3n-1) { background: #E97451; }
-        .tag:nth-of-type(3n) { background: #50C878; }
-    </style>
-
     <article>
         <h1>{{ recipe.name }}</h1>
         <h3>Tags: </h3>
@@ -42,4 +26,69 @@
             {% endfor %}
         </ol>
     </article>
+
+    <article>
+        <form action="{% url 'submit_review' recipe.id %}" method="POST">
+            {% csrf_token %}
+            <div class="review-form">
+                <h4>Leave a review</h4>
+                <div class="rating">
+                    Rating:&nbsp;
+                    <input type="radio" name="rating" id="rating-10" value="5" required><label for="rating-10" title="5"></label>
+                    <input type="radio" name="rating" id="rating-9" value="4.5" required><label for="rating-9" title="4.5" class="half"></label>
+                    <input type="radio" name="rating" id="rating-8" value="4" required><label for="rating-8" title="4"></label>
+                    <input type="radio" name="rating" id="rating-7" value="3.5" required><label for="rating-7" title="3.5" class="half"></label>
+                    <input type="radio" name="rating" id="rating-6" value="3" required><label for="rating-6" title="3"></label>
+                    <input type="radio" name="rating" id="rating-5" value="2.5" required><label for="rating-5" title="2.5" class="half"></label>
+                    <input type="radio" name="rating" id="rating-4" value="2" required><label for="rating-4" title="2"></label>
+                    <input type="radio" name="rating" id="rating-3" value="1.5" required><label for="rating-3" title="1.5" class="half"></label>
+                    <input type="radio" name="rating" id="rating-2" value="1" required><label for="rating-2" title="1"></label>
+                    <input type="radio" name="rating" id="rating-1" value="0.5" required><label for="rating-1" title="0.5" class="half"></label>
+                </div>
+                <p>Comment:</p>
+                <textarea name="comment" rows="4" cols="50"></textarea>
+                {% if user.is_authenticated %}
+                <button type="submit">post review</button>
+                {% else %}
+                <p>You must be logged in to post a review.&nbsp;
+                    <span><a href={% url 'login' %} class="login-now">Login now.</a></span>
+                </p>
+                {% endif %}
+            </div>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <hr class="solid">
+
+        <div class="reviews">
+            <h3>User Reviews</h3>
+            {% for review in reviews %}
+                <div class="review">
+                    <div class="review-header">
+                        <div class="review-username">{{ review.user__user__username }}</div>
+                        <p>•</p>
+                        <span class="stars">
+                            <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="review-comment">{{ review.comment }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+
+    <script>
+        var message = document.getElementById("message");
+        setTimeout(function(){ 
+            message.style.display = "none";
+        }, 5000);
+    </script>
 {% endblock content %}
