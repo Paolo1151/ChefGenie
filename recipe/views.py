@@ -8,6 +8,8 @@ from .models import Recipe, Requirement, RecipeReview
 from .search_engine.nlpmodel import NLPModel
 from .search_engine.filters import SearchConfig
 
+from analytics.models import Mealmade
+
 
 import psycopg2
 
@@ -88,6 +90,13 @@ def recipe_details(request, pk):
             'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__user__username', 'rating', 'comment')
         }
     )
+
+def make_recipe(request, pk):
+    user_id = request.user.id
+
+    # Record the new recipe with the user id
+
+    pass
 
 def submit_review(request, recipe_id):
     '''
