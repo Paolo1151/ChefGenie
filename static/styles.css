@@ -95,7 +95,7 @@ hr{
     text-align: center;
 }
 
-button, #quantity_add {
+button{
     width: 10%;
     background-color: #bf9270;
     color: white;
@@ -104,17 +104,66 @@ button, #quantity_add {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-  }
+}
 
-  button a{
-      text-decoration: none;
-      color: #FFF;
-  }
+button a{
+    text-decoration: none;
+    color: #FFF;
+}
 
-  button:hover {
-    background-color: #b98760;
-  }
+button:hover {
+background-color: #b98760;
+}
 
 #searchprompt {
     color: #fff;
+}
+
+#pantry_div
+{
+    text-align: center;
+    padding: 20px;
+    display: inline-grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(6, 4fr);
+    gap: 20px;
+} 
+
+#pantry_item
+{
+    border-radius: 20px;
+    padding: 20px;
+    background-color: #ffeddb;
+    height: 150px;
+}
+
+button.pantry_item_edit
+{
+    width: 40%;
+}
+
+p
+{
+    font-family: varela;
+}
+
+h2.pantry_name{
+    margin:0;
+    padding:0;
+}
+
+h5.pantry_quantity 
+{
+    margin:0;
+    padding:10px;
+}
+
+#pantry_add_form
+{
+    margin-left:20px;
+    padding:10px;
+    border-radius: 10px;
+    width: 35%;
+    background-color: #ffeddb;
 }

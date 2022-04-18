@@ -37,7 +37,6 @@ def pantry_add(request):
 	form = AddIngredientForm(request.POST, request.FILES)
 	if form.is_valid():
 		new_ingr = Ingredients(
-			img = form.cleaned_data['img'],
 			name = form.cleaned_data['name'],
 			amount = form.cleaned_data['amount']
 		)
