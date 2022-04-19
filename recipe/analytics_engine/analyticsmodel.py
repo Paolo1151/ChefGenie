@@ -18,35 +18,35 @@ class AnalyticsModel:
         with psycopg2.connect(AnalyticsModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 curs.execute(
-'''
-SELECT
-	m.date,
-	SUM(m.total_calories) as calories_per_day
-FROM
-(
-	SELECT 
-		x.id,
-		x.date,
-		x.recipe_id,
-		x.user_id,
-		SUM(A.calories * Z.required_amount * X.amount) AS total_calories
-	FROM 
-		recipe_mealmade X
-		inner join recipe_recipe Y on X.recipe_id = Y.id
-		inner join recipe_requirement Z on Z.recipe_id = Y.id
-		inner join recipe_ingredient A on A.id = Z.id
-	GROUP BY
-		x.id,
-		x.date,
-		x.recipe_id,
-		x.user_id
-) m
-GROUP BY
-	m.date 
-ORDER BY
-	m.date
-FETCH FIRST 7 ROWS ONLY
-'''
+                    '''
+                    SELECT
+                        m.date,
+                        SUM(m.total_calories) as calories_per_day
+                    FROM
+                    (
+                        SELECT 
+                            x.id,
+                            x.date,
+                            x.recipe_id,
+                            x.user_id,
+                            SUM(A.calories * Z.required_amount * X.amount) AS total_calories
+                        FROM 
+                            recipe_mealmade X
+                            inner join recipe_recipe Y on X.recipe_id = Y.id
+                            inner join recipe_requirement Z on Z.recipe_id = Y.id
+                            inner join recipe_ingredient A on A.id = Z.id
+                        GROUP BY
+                            x.id,
+                            x.date,
+                            x.recipe_id,
+                            x.user_id
+                    ) m
+                    GROUP BY
+                        m.date 
+                    ORDER BY
+                        m.date
+                    FETCH FIRST 7 ROWS ONLY
+                    '''
                 )
 
                 meal_history = {'date': [], 'calories': []}
@@ -56,7 +56,7 @@ FETCH FIRST 7 ROWS ONLY
 
         df = pd.DataFrame(meal_history)
         df['date'] = pd.to_datetime(df['date'])
-
+        final_df = df.to_html()
         plt.switch_backend('AGG')
         f = plt.figure()
         plt.plot(df['date'], df['calories'])
