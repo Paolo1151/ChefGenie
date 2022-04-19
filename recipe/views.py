@@ -3,13 +3,12 @@ from django.contrib import messages
 
 from chefgenie.settings import BASE_DIR, NLP_MODEL
 
-from .forms import SearchForm, ReviewForm
-from .models import Recipe, Requirement, RecipeReview
+from .forms import SearchForm, ReviewForm, MealmadeForm
+from .models import Recipe, Requirement, RecipeReview, Mealmade
 from .search_engine.nlpmodel import NLPModel
 from .search_engine.filters import SearchConfig
 
-from analytics.models import Mealmade
-
+from datetime import datetime as date
 
 import psycopg2
 
@@ -21,6 +20,15 @@ def recipe_home(request):
         Request is assumed to be a GET protocol 
     '''
     return render(request, 'recipe/recipehome.html')
+
+def analytics_home(request):
+    '''
+    Render the Home page of the Recipes HTML
+    
+    request : Django Request object
+        Request is assumed to be a GET protocol 
+    '''
+    return render(request, 'recipe/analytics.html')
 
 
 def recipe_recommend(request):
@@ -92,11 +100,20 @@ def recipe_details(request, pk):
     )
 
 def make_recipe(request, pk):
-    user_id = request.user.id
-
+    url = request.META.get('HTTP_REFERER')
+    recipe_id = pk
     # Record the new recipe with the user id
-
-    pass
+    if request.method == 'POST':
+        form = MealmadeForm(request.POST)
+        if form.is_valid():
+            consume = Mealmade()
+            consume.recipe_id = recipe_id
+            consume.user_id = request.user.id
+            consume.amount = form.cleaned_data['amount']
+            #consume.date = date.today
+            consume.save()
+        messages.success(request, 'Thank you! This meal has been added to your history.')
+    return redirect(url)
 
 def submit_review(request, recipe_id):
     '''
