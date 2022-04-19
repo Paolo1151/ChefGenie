@@ -11,36 +11,29 @@
 {% block content %}
 
 <body>
-        <form action ='pantry/add' method ='POST' enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ add_form }}
-            <input type="submit" value="Submit">
-        </form>
-        
-        <div style = 'display: flex;  
-        justify-content: space-evenly;  
-        align-content: flex-start; 
-        flex-direction: row; 
-        flex-wrap: wrap;'>
-        
-        {% for a in pantry %}
-            <section>
-                <img src = '{{a.img.url}}' width="200" height="200"> 
-                <br>
-                <h3 style = "display:inline;">{{a.name}}</h3>
-                <h5 style = "display:inline;">Quantity: {{a.amount}}</h5>
-                <br>
-                <section style = "display:inline-block;">
-                    <button type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
-                    <button type="submit" onclick="location.href = '/pantry/qadd/{{a.id}}'">Add 1</button>
+    <br>
+        <div id= "pantry_add_form">
+            <h3 style = "margin:0;padding:5px; text-align:center;">Add Ingredient</h3>
+            <form action ='pantry/add' method ='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ add_form }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        <div id = "pantry_div">
+            {% for a in pantry %}
+                <section id = "pantry_item">
+                    <h2 class = "pantry_name">{{a.name}}</h2>
+                    <h5 class = "pantry_quantity">Quantity:   <span style = "font-size:large;">{{a.amount}}</span></h5>
+                    <section style = "display:inline-block;">
+                        <button class = "pantry_item_edit" type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
+                        <button class = "pantry_item_edit" type="submit" onclick="location.href = '/pantry/qadd/{{a.id}}'">Add 1</button>
+                    </section>
                 </section>
-            </section>
-        {% endfor %}
+            {% endfor %}
         </div>
     
 </body>
-
-
-
     
 {% endblock content %}

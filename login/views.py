@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib import messages, auth
 
 from .models import Account, UserAccount
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, EditAccountForm
 
 def account_view(request):
     if request.user.id is not None:
@@ -65,3 +65,17 @@ def signup_view(request):
 
     context = {'message': message, 'form': form}
     return render(request, 'login/signup.html', context)
+
+def edit_account_view(request):
+    if request.user.id is not None:
+        user = UserAccount.objects.get(user_id=request.user.id)
+        if request.method == 'POST':
+            form = EditAccountForm(request.POST, instance=user)
+            form.save()
+            return redirect('/account')
+        else:
+            form = EditAccountForm()
+            context = {'user': user, 'form': form}
+            return render(request, 'login/edit_account.html', context)
+    else:
+        return redirect('login')
