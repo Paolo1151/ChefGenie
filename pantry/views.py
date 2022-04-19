@@ -17,7 +17,7 @@ def pantry_gallery_view(request):
     rendered: A Rendered Page Object based on the html
     '''
 	return render(request, 'pantry/pantry.html', {
-		'pantry': Ingredients.objects.all(),
+		'pantry': Ingredients.objects.all().order_by('id'),
 		'add_form': AddIngredientForm()
 	})
 
@@ -37,7 +37,6 @@ def pantry_add(request):
 	form = AddIngredientForm(request.POST, request.FILES)
 	if form.is_valid():
 		new_ingr = Ingredients(
-			img = form.cleaned_data['img'],
 			name = form.cleaned_data['name'],
 			amount = form.cleaned_data['amount']
 		)
