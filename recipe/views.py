@@ -28,7 +28,7 @@ def analytics_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
-    ANALYTICS_MODEL.make_graph()
+    ANALYTICS_MODEL.make_graph(request.user.id)
     return render(request, 'recipe/analytics.html')
 
 

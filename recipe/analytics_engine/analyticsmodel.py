@@ -14,11 +14,11 @@ class AnalyticsModel:
         print('Initialized Analytics Model...')
 
     @staticmethod
-    def make_graph():
+    def make_graph(user_id):
         with psycopg2.connect(AnalyticsModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 curs.execute(
-                    '''
+                    f'''
                     SELECT
                         m.date,
                         SUM(m.total_calories) as calories_per_day
@@ -41,6 +41,8 @@ class AnalyticsModel:
                             x.recipe_id,
                             x.user_id
                     ) m
+                    WHERE
+                        m.user_id = {user_id}
                     GROUP BY
                         m.date 
                     ORDER BY
