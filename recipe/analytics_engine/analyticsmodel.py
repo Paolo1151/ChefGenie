@@ -1,6 +1,6 @@
-from matplotlib import pyplot as plt 
+from matplotlib import pyplot as plt
 from decouple import config
-
+from io import BytesIO
 
 import pandas as pd
 
@@ -56,11 +56,14 @@ class AnalyticsModel:
 
         df = pd.DataFrame(meal_history)
         df['date'] = pd.to_datetime(df['date'])
-        table_df = df.to_html()
-        plt.figure()
+
+        plt.switch_backend('AGG')
+        f = plt.figure()
         plt.plot(df['date'], df['calories'])
         plt.xticks(rotation=45)
+        plt.tight_layout()
         plt.savefig(os.path.join(os.path.dirname(__file__), '..', '..',  'media', 'analytics', 'graphs', 'MealHistory.jpeg'))
+        plt.close(f)
 
     @staticmethod
     def get_connection_string():
