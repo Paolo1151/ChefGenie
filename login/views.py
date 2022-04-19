@@ -67,41 +67,12 @@ def signup_view(request):
     return render(request, 'login/signup.html', context)
 
 def edit_account_view(request):
-    # if request.method == 'POST':
-    #     form = EditAccountForm(request.POST)
-    #     if form.is_valid():
-    #         email_address = form.cleaned_data['email_address']
-    #         username = form.cleaned_data['username']
-    #         password = form.cleaned_data['password']
-    #         user = Account.objects.create_user(email_address=email_address, username=username)
-    #         user.set_password(password)
-    #         user.save()
-    #         user_account = UserAccount()
-    #         user_account.user_id = user.id
-    #         user_account.save()
-    #         message = 'Account created!'
-    #         return redirect('/')
-    #     elif(form.cleaned_data['password'] != form.cleaned_data['confirm_password']):
-    #             message = 'Passwords do not match'
-    #     else:
-    #         message = 'Username or Email already taken!'
-    # else:
-    #     message = ''
-    #     form = SignupForm()
-
-    # context = {'message': message, 'form': form}
-    # return render(request, 'login/signup.html', context)
     if request.user.id is not None:
-        account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
         if request.method == 'POST':
-            form = EditAccountForm(request.POST)
-            if form.is_valid():
-                user.weight = form.cleaned_data['weight']
-                user.height = form.cleaned_data['height']
-                user.weight_goal = form.cleaned_data['weight_goal']
-                user.calorie_goal = form.cleaned_data['calorie_goal']
-                return redirect('/account')    
+            form = EditAccountForm(request.POST, instance=user)
+            form.save()
+            return redirect('/account')
         else:
             form = EditAccountForm()
             context = {'account': account, 'user': user, 'form': form}

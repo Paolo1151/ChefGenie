@@ -70,3 +70,9 @@ class UserAccount(models.Model):
     @property
     def bmi(self):
         return self.weight / (self.height**2 / 10000)
+
+    def change_values(self, nweight, nheight, nweight_goal, ncalorie_goal):
+        weight = nweight
+        height = nheight
+        weight_goal = nweight_goal
+        calorie_goal = ncalorie_goal
