@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% if account %}
+    {% block title %}
+        <title>{{ account.username|capfirst }}'s Profile</title>
+    {% endblock %}
+
+    {% block content %}
+        <article>
+            <header>
+                <h1>edit account</h1>
+            </header>
+
+            <hr>
+            
+            <form class="form" method="post">
+                {% csrf_token %}
+                <h2>weight</h2>
+                {{ form.weight }} <br> <br>
+                <h2>height</h2>
+                {{ form.height }} <br> <br>
+                <h2>weight_goal</h2>
+                {{ form.weight_goal }} <br> <br>
+                <h2>calorie goal</h2>
+                {{ form.calorie_goal }} <br> <br>
+        
+                <button type="submit">submit</button>
+            </form>
+        </article>
+    {% endblock content %}
+{% endif %}
