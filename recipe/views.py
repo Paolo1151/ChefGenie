@@ -1,11 +1,11 @@
 from django.shortcuts import render, reverse, redirect
 from django.contrib import messages
 
-from chefgenie.settings import BASE_DIR, NLP_MODEL
+from chefgenie.settings import BASE_DIR, NLP_MODEL, ANALYTICS_MODEL
+
 
 from .forms import SearchForm, ReviewForm, MealmadeForm
 from .models import Recipe, Requirement, RecipeReview, Mealmade
-from .search_engine.nlpmodel import NLPModel
 from .search_engine.filters import SearchConfig
 
 from datetime import datetime as date
@@ -28,6 +28,7 @@ def analytics_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
+    ANALYTICS_MODEL.make_graph()
     return render(request, 'recipe/analytics.html')
 
 
