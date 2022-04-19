@@ -56,7 +56,7 @@ class AnalyticsModel:
 
         df = pd.DataFrame(meal_history)
         df['date'] = pd.to_datetime(df['date'])
-
+        final_df = df.to_html()
         plt.switch_backend('AGG')
         f = plt.figure()
         plt.plot(df['date'], df['calories'])
