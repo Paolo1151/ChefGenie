@@ -57,7 +57,6 @@ FETCH FIRST 7 ROWS ONLY
 
         df = pd.DataFrame(meal_history)
         df['date'] = pd.to_datetime(df['date'])
-        plt.figure()
         plt.plot(df['date'], df['calories'])
         plt.xticks(rotation=45)
         plt.savefig(os.path.join(os.path.dirname(__file__), '..', '..',  'media', 'analytics', 'graphs', 'MealHistory.jpeg'))
