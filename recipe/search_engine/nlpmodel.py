@@ -1,10 +1,12 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from decouple import config
 
 from .recipe import Recipe
-from . import utility
+from .filters import SearchConfig
 
 import pandas as pd
 import numpy as np
+
 
 import spacy
 import joblib
@@ -16,44 +18,7 @@ class NLPModel:
         '''Create an NLP Processor with an internal nlp object for nlp operations'''
         self.nlp = spacy.load('en_core_web_md')
 
-        self.recipes = []
-        # Generate Pool of Recipes
-        try:
-            with psycopg2.connect(utility.get_connection_string()) as conn:
-                with conn.cursor() as curs:
-                    curs.execute(f'SELECT * FROM {pool_table};')
-                    for params in curs:
-                        tags = params[-1].split()
-                        recipe = Recipe(*params[1:-1], tags=tags)
-                        self.recipes.append(recipe)
-        except psycopg2.errors.UndefinedTable:
-            print('Skipped Population of Recipes...')
-
         print('Initialized NLPModel...')
-
-    def generate_recommendations(self, prompt):
-        '''
-        Attributes:
-        -----------
-        prompt : str
-            The prompt used to determine recommendations.
-        pool : Dict<str, str>
-            The recommendation pool with names as the keys and the tags as the values.
-
-        Returns:
-        -----------
-        sorted_recommendations : List
-            Ordered list of recommendations based on score
-        '''
-
-        processed_text = self.process(prompt)
-
-        for recipe in self.recipes:
-            recipe.set_similarity(self.compare(processed_text, recipe.get_tags()))
-
-        self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
-
-        return self.serialize_recipes()
 
     def process(self, text):
         '''
@@ -110,6 +75,47 @@ class NLPModel:
 
         return doc1.similarity(doc2)
 
+    def generate_recommendations(self, prompt, search_config):
+        '''
+        Generate the Recommendations based on a prompt and a search Config
+
+        Parameters
+        ----------
+        prompt : str
+            The search_prompt for the recommendations
+
+        search_config : SearchConfig
+            The SearchConfig object that contains the filters for the search_engine
+        '''
+        processed_text = self.process(prompt)
+
+        self.recipes = []
+        with psycopg2.connect(NLPModel.get_connection_string()) as conn:
+            with conn.cursor() as curs:
+                if search_config:
+                    table_creation_query, filtered_recipes_query = search_config.to_sql()
+                    curs.execute(table_creation_query)
+                    curs.execute(filtered_recipes_query)
+                else:
+                    curs.execute('SELECT * FROM recipe_recipe')
+
+
+                for params in curs:
+                    tags = params[-2].split()
+                    recipe = Recipe(*params[:-2], tags=tags)
+                    recipe.set_similarity(self.compare(processed_text, recipe.get_tags()))
+                    self.recipes.append(recipe)
+
+                if search_config:
+                    curs.execute('DROP TABLE total_calories_lookup;')
+
+
+        self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
+
+        
+
+        return self.serialize_recipes()
+
     @staticmethod
     def load_model():
         return joblib.load(os.path.join(os.path.dirname(__file__), 'models', 'nlpmodel.joblib'))
@@ -122,3 +128,10 @@ class NLPModel:
         for recipe in self.recipes:
             serialized_recipes.append(recipe.__dict__)
         return serialized_recipes
+
+    @staticmethod
+    def get_connection_string():
+        dbname = config('DBNAME')
+        user = config('USER')
+        password = config('PASSWORD')
+        return f'dbname={dbname} user={user} password={password}'
