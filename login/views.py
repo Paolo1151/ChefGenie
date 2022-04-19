@@ -75,7 +75,7 @@ def edit_account_view(request):
             return redirect('/account')
         else:
             form = EditAccountForm()
-            context = {'account': account, 'user': user, 'form': form}
+            context = {'user': user, 'form': form}
             return render(request, 'login/edit_account.html', context)
     else:
         return redirect('login')
