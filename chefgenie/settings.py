@@ -16,6 +16,7 @@ from decouple import config
 import os
 
 from recipe.search_engine.nlpmodel import NLPModel
+from recipe.analytics_engine.analyticsmodel import AnalyticsModel
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,6 +80,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'chefgenie.wsgi.application'
 
+AUTH_USER_MODEL = 'login.Account'
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -98,8 +101,6 @@ DATABASES = {
         'PASSWORD': config('PASSWORD'),
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -150,3 +151,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # NLP Model
 NLP_MODEL = NLPModel('recipe_recipe')
+
+# Analytics Model
+ANALYTICS_MODEL = AnalyticsModel()

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% if request.session.user_index != 0 %}
+{% if account %}
     {% block title %}
-        <title>{{ user.username|capfirst }}'s Profile</title>
+        <title>{{ account.username|capfirst }}'s Profile</title>
     {% endblock %}
 
     {% block content %}
@@ -13,19 +13,23 @@
 
             <hr>
             
+            <a href="/edit_account">edit</a>
             <h2>username</h2>
-            <p>{{user.username}}</p>
+            <p>{{ account.username }}</p>
             <h2>weight (kg)</h2>
-            <p>{{user.weight}} kg</p>
+            <p>{{ user.weight }} kg</p>
             <h2>height (cm)</h2>
-            <p>{{user.height}} cm</p>
+            <p>{{ user.height }} cm</p>
             <h2>bmi</h2>
-            <p>{{user.bmi|floatformat:2}}</p>
+            <p>{{ user.bmi|floatformat:2 }}</p>
             <h2>weight goal</h2>
-            <p>{{user.weight_goal}}</p>
+            <p>{{ user.weight_goal }}</p>
             <h2>calorie goal</h2>
-            <p>{{user.calorie_goal}}</p>
-
+            <p>{{ user.calorie_goal }}</p>
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">logout</button>
+            </form>
         </article>
     {% endblock content %}
 {% endif %}

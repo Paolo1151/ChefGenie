@@ -1,16 +1,19 @@
+from tkinter import CASCADE
 from django.db import models
-from django.contrib.auth.models import User
-#from login.models import User as Profile
+from login.models import UserAccount
+from recipe.models import Recipe
+from datetime import datetime
 
 #model that records transactions 
 #recipe and amount served 
 
-class Mealmade(models.Model):
-	recipename = models.CharField(max_length=100,)
+""" class Mealmade(models.Model):
+	recipename = models.ForeignKey(Recipe,null=True, on_delete=models.CASCADE)
 	amount = models.IntegerField()
-	calories = models.IntegerField()
-	person_of = models.ForeignKey(User,null=True,on_delete=models.CASCADE)
+	date = models.DateField(default=datetime.now)
+	person_of = models.ForeignKey(UserAccount,null=True,on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.recipename
 
+ """
