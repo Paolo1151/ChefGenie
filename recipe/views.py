@@ -28,8 +28,11 @@ def analytics_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
-    ANALYTICS_MODEL.make_graph(request.user.id)
-    return render(request, 'recipe/analytics.html')
+    if request.user.id is not None:
+        ANALYTICS_MODEL.make_graph(request.user.id)
+        return render(request, 'recipe/analytics.html')
+    else:
+        return redirect('login')
 
 
 def recipe_recommend(request):
