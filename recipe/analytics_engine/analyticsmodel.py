@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Qt5Agg')
+matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 from decouple import config
@@ -18,6 +18,7 @@ import base64
 
 class AnalyticsModel:
     def __init__(self):
+        print(matplotlib.get_backend())
         print('Initialized Analytics Model...')
 
     @staticmethod
@@ -76,6 +77,8 @@ class AnalyticsModel:
         flike = BytesIO()
         fig.savefig(flike)
         b64 = base64.b64encode(flike.getvalue()).decode()
+
+        plt.close(fig)
 
 
         return {'graph': b64}
