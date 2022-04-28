@@ -1,14 +1,16 @@
 import matplotlib
-matplotlib.use('agg')
+matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 from decouple import config
 from io import BytesIO
 
+
 import pandas as pd
 
 import psycopg2
 import os
+import base64
 
 ##############################################
 # URGENT: Investigate why Matplotlib backend change wont work
@@ -16,8 +18,6 @@ import os
 
 class AnalyticsModel:
     def __init__(self):
-        import matplotlib
-        matplotlib.use('agg')
         print('Initialized Analytics Model...')
 
     @staticmethod
@@ -65,14 +65,20 @@ class AnalyticsModel:
 
         df = pd.DataFrame(meal_history)
         df['date'] = pd.to_datetime(df['date'])
-        final_df = df.to_html()
-        plt.switch_backend('AGG')
-        f = plt.figure()
+
+
+        fig = plt.figure()
+        
         plt.plot(df['date'], df['calories'])
         plt.xticks(rotation=45)
         plt.tight_layout()
-        plt.savefig(os.path.join(os.path.dirname(__file__), '..', '..',  'media', 'analytics', 'graphs', 'MealHistory.jpeg'))
-        plt.close(f)
+
+        flike = BytesIO()
+        fig.savefig(flike)
+        b64 = base64.b64encode(flike.getvalue()).decode()
+
+
+        return {'graph': b64}
 
     @staticmethod
     def get_connection_string():

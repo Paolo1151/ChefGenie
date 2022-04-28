@@ -29,8 +29,8 @@ def analytics_home(request):
         Request is assumed to be a GET protocol 
     '''
     if request.user.id is not None:
-        ANALYTICS_MODEL.make_graph(request.user.id)
-        return render(request, 'recipe/analytics.html')
+        context = ANALYTICS_MODEL.make_graph(request.user.id)
+        return render(request, 'recipe/analytics.html', context)
     else:
         return redirect('login')
 
