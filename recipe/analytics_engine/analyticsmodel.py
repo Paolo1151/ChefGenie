@@ -1,6 +1,5 @@
 import matplotlib
-
-matplotlib.use('Agg')
+matplotlib.use('agg')
 
 import matplotlib.pyplot as plt
 from decouple import config
@@ -11,11 +10,14 @@ import pandas as pd
 import psycopg2
 import os
 
-
+##############################################
+# URGENT: Investigate why Matplotlib backend change wont work
+##############################################
 
 class AnalyticsModel:
     def __init__(self):
-        matplotlib.use('Agg')
+        import matplotlib
+        matplotlib.use('agg')
         print('Initialized Analytics Model...')
 
     @staticmethod
