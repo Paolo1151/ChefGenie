@@ -20,7 +20,7 @@ class NLPModel:
             self.nlp = spacy.load('en_core_web_md')
         except:
             spacy.cli.download('en_core_web_md')
-            self.nlp = space.load('en_core_web_md')
+            self.nlp = spacy.load('en_core_web_md')
 
         print('Initialized NLPModel...')
 
