@@ -138,4 +138,5 @@ class NLPModel:
         dbname = config('DBNAME')
         user = config('USER')
         password = config('PASSWORD')
-        return f'dbname={dbname} user={user} password={password}'
+        host = config('HOST')
+        return f'dbname={dbname} user={user} password={password} host={host}'
