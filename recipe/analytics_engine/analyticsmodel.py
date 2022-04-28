@@ -1,5 +1,7 @@
 import matplotlib
 
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 from decouple import config
 from io import BytesIO
