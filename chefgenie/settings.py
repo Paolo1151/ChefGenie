@@ -16,10 +16,6 @@ from decouple import config
 import os
 import django_heroku
 
-import matplotlib
-matplotlib.use('Agg')
-
-
 from recipe.search_engine.nlpmodel import NLPModel
 from recipe.analytics_engine.analyticsmodel import AnalyticsModel
 
