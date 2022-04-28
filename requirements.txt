@@ -6,8 +6,7 @@ python-decouple==3.6
 scikit_learn==1.0.2
 spacy==3.2.3
 psycopg2
-<<<<<<< Updated upstream
 Pillow
-=======
-Pillow
->>>>>>> Stashed changes
+matplotlib
+django_heroku
+gunicorn

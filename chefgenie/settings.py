@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 
 import os
+import django_heroku
 
 from recipe.search_engine.nlpmodel import NLPModel
 from recipe.analytics_engine.analyticsmodel import AnalyticsModel
@@ -96,7 +97,8 @@ AUTH_USER_MODEL = 'login.Account'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chefgenie',
+        'HOST': config('HOST'),
+        'NAME': config('DBNAME'),
         'USER' : config('USER'),
         'PASSWORD': config('PASSWORD'),
     }
@@ -154,3 +156,6 @@ NLP_MODEL = NLPModel('recipe_recipe')
 
 # Analytics Model
 ANALYTICS_MODEL = AnalyticsModel()
+
+# Heroku Settings
+django_heroku.settings(locals())
