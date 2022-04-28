@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 from decouple import config
 from io import BytesIO
@@ -13,6 +13,7 @@ import os
 
 class AnalyticsModel:
     def __init__(self):
+        matplotlib.use('Agg')
         print('Initialized Analytics Model...')
 
     @staticmethod
