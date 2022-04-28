@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('Qt5Agg')
 
 import matplotlib.pyplot as plt
 from decouple import config
