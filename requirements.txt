@@ -10,3 +10,4 @@ Pillow
 matplotlib
 django_heroku
 gunicorn
+python-tk
