@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('svg')
 
 import matplotlib.pyplot as plt
 from decouple import config
