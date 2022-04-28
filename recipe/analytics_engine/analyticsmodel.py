@@ -23,6 +23,7 @@ class AnalyticsModel:
 
     @staticmethod
     def make_graph(user_id):
+        print(AnalyticsModel.get_connection_string())
         with psycopg2.connect(AnalyticsModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -88,4 +89,5 @@ class AnalyticsModel:
         dbname = config('DBNAME')
         user = config('USER')
         password = config('PASSWORD')
-        return f'dbname={dbname} user={user} password={password}'
+        host = config('HOST')
+        return f'dbname={dbname} user={user} password={password} host={host}'
