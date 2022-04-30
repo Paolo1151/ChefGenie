@@ -48,9 +48,7 @@ class AnalyticsEngine(BaseModel):
                     
                     merged_df = date_df.merge(df, left_on='date', right_on='date', how='left')
                     merged_df = merged_df.fillna(0).sort_values(by='date', ascending=False)
-
-                    print(merged_df)
-
+                    
         return AnalyticsEngine._generate_graph(merged_df)
 
     @staticmethod
