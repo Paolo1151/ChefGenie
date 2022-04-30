@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 
+import psycopg2
 
 class Migration(migrations.Migration):
 
