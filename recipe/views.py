@@ -86,7 +86,7 @@ def recipe_recommend(request):
 
 def recipe_results(request):
     '''Render the recommendations if it exists'''
-    if 'recommendations' in request.session:
+    if 'result_goal' in request.session and 'result_other' in request.session:
         return render(request, 'recipe/reciperesults.html')
     else:
         return redirect('recipe_home')

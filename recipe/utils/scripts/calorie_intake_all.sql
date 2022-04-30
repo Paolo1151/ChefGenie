@@ -13,7 +13,7 @@ FROM
         recipe_mealmade X
         inner join recipe_recipe Y on X.recipe_id = Y.id
         inner join recipe_requirement Z on Z.recipe_id = Y.id
-        inner join recipe_ingredient A on A.id = Z.id
+        inner join recipe_ingredient A on A.id = Z.ingredient_id
     GROUP BY
         x.id,
         x.date,

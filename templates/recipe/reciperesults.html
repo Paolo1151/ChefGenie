@@ -8,7 +8,7 @@
         </h4>
     </center>
 
-    {% if not request.session.recommendations %}
+    {% if not request.session.result_goal and not request.session.result_other %}
         <center>
             <h4 style="color: white;">
                 No Results Found

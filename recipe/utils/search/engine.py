@@ -32,12 +32,15 @@ class SearchEngine(RecipeModel):
             Other Recipes: Recipes that fit the term, but goes above the goal
         '''
         calorie_goal = self.calculate_calorie_goal(search_config.user)
-
+        
         self.flush_pool()
 
         self.fill_results(search_config)
 
         self.partition_results(calorie_goal)
+
+        print(SearchEngine.package_recipes(self.recipes))
+        print(SearchEngine.package_recipes(self.goal_recipes))
 
         return dict(
             goal_recipes=SearchEngine.package_recipes(self.goal_recipes),
@@ -52,7 +55,9 @@ class SearchEngine(RecipeModel):
                     intake_query = intake_query.replace('[USERID]', str(user.user_id))
                     curs.execute(intake_query)
 
-                    current_calories = curs.fetchone()[1]
+                    query_result = curs.fetchone()
+
+                    current_calories = 0 if not query_result else query_result[1]
         return user.calorie_goal - current_calories
 
     def fill_results(self, search_config):
@@ -67,8 +72,8 @@ class SearchEngine(RecipeModel):
                 curs.execute('DROP TABLE total_calories_lookup;')
 
     def partition_results(self, calorie_goal):
-        self.goal_recipes = filter(lambda x: x.calories <= calorie_goal, self.recipes)
-        self.recipes = filter(lambda x: x.calories > calorie_goal, self.recipes)
+        self.goal_recipes = list(filter(lambda x: x.calories <= calorie_goal, self.recipes))
+        self.recipes = list(filter(lambda x: x.calories > calorie_goal, self.recipes))
 
 
 

@@ -20,7 +20,7 @@ class AnalyticsEngine(BaseModel):
     def generate_last_n_days(n):
         today = datetime.datetime.today()
         date_df = pd.date_range(
-            end=f'{today.day}/{today.month}/{today.year}',
+            end=f'{today.month}/{today.day}/{today.year}',
             periods=n,
             freq='D'
         )
