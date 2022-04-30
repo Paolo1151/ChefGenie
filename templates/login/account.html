@@ -8,14 +8,12 @@
     {% block content %}
         <article>
             <header>
-                <h1>account</h1>
+                <h1>{{ account.username }}</h1>
             </header>
 
             <hr>
             
-            <a href="/edit_account">edit</a>
-            <h2>username</h2>
-            <p>{{ account.username }}</p>
+            <!-- <a href="/edit_account">edit</a>
             <h2>weight (kg)</h2>
             <p>{{ user.weight }} kg</p>
             <h2>height (cm)</h2>
@@ -27,6 +25,28 @@
             <h2>calorie goal</h2>
             <p>{{ user.calorie_goal }}</p>
             <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">logout</button>
+            </form> -->
+
+
+            <form class="form" method="post">
+                {% csrf_token %}
+                <h2 style="color:black">weight (kg)</h2>
+                {{ form.weight }} <br> <br>
+                <h2 style="color:black">height (cm)</h2>
+                {{ form.height }} <br> <br>
+                <h2 style="color:black">bmi</h2>
+                <input type="text" class="account_field" value="{{ user.bmi|floatformat:2 }}" readonly></input> <br> <br>
+                <h2 style="color:black">weight goal</h2>
+                {{ form.weight_goal }} <br> <br>
+                <h2 style="color:black">calorie goal</h2>
+                {{ form.calorie_goal }} <br> <br>
+        
+                <button type="submit">submit</button>
+            </form>
+            
+            <form action="{% url 'logout' %}" method="POST" class="form">
                 {% csrf_token %}
                 <button type="submit">logout</button>
             </form>

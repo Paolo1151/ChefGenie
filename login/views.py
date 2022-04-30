@@ -7,13 +7,51 @@ from .models import Account, UserAccount
 from .forms import LoginForm, SignupForm, EditAccountForm
 
 def account_view(request):
+    # if request.user.id is not None:
+    #     account = Account.objects.get(id=request.user.id)
+    #     user = UserAccount.objects.get(user_id=request.user.id)
+    #     context = {'account': account, 'user': user}
+    #     return render(request, 'login/account.html', context)
+    # else:
+    #     return redirect('login')
+
     if request.user.id is not None:
         account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
-        context = {'account': account, 'user': user}
-        return render(request, 'login/account.html', context)
+        if request.method == 'POST':
+            form = EditAccountForm(request.POST, instance=user)
+            form.save()
+            return redirect('/account')
+        else:
+            form = EditAccountForm(request.GET, instance=user)
+            form.fields['weight'].widget.attrs = {'value': user.weight, 'class': 'account_field'}
+            form.fields['height'].widget.attrs = {'value': user.height, 'class': 'account_field'}
+            form.fields['weight_goal'].widget.attrs = {'value': user.weight_goal, 'class': 'account_field'}
+            form.fields['calorie_goal'].widget.attrs = {'value': user.calorie_goal, 'class': 'account_field'}
+            context = {'user': user, 'form': form, 'account': account}
+            return render(request, 'login/account.html', context)
     else:
         return redirect('login')
+
+
+
+    # if request.user.id is not None:
+    #     user = UserAccount.objects.get(user_id=request.user.id)
+    #     if request.method == 'POST':
+    #         form = EditAccountForm(request.POST, instance=user)
+    #         form.save()
+    #         return redirect('/account')
+    #     else:
+    #         form = EditAccountForm(request.GET, instance=user)
+    #         form.fields['weight'].widget.attrs = {'value': user.weight, 'class': 'account_field'}
+    #         form.fields['height'].widget.attrs = {'value': user.height, 'class': 'account_field'}
+    #         form.fields['weight_goal'].widget.attrs = {'value': user.weight_goal, 'class': 'account_field'}
+    #         form.fields['calorie_goal'].widget.attrs = {'value': user.calorie_goal, 'class': 'account_field'}
+    #         context = {'user': user, 'form': form}
+    #         return render(request, 'login/edit_account.html', context)
+    # else:
+    #     return redirect('login')
+
 
 
 def login_view(request):
@@ -74,7 +112,11 @@ def edit_account_view(request):
             form.save()
             return redirect('/account')
         else:
-            form = EditAccountForm()
+            form = EditAccountForm(request.GET, instance=user)
+            form.fields['weight'].widget.attrs = {'value': user.weight, 'class': 'account_field'}
+            form.fields['height'].widget.attrs = {'value': user.height, 'class': 'account_field'}
+            form.fields['weight_goal'].widget.attrs = {'value': user.weight_goal, 'class': 'account_field'}
+            form.fields['calorie_goal'].widget.attrs = {'value': user.calorie_goal, 'class': 'account_field'}
             context = {'user': user, 'form': form}
             return render(request, 'login/edit_account.html', context)
     else:
