@@ -29,6 +29,11 @@
                 <button type="submit">logout</button>
             </form> -->
 
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">logout</button>
+            </form>
+
 
             <form class="form" method="post">
                 {% csrf_token %}
@@ -44,11 +49,6 @@
                 {{ form.calorie_goal }} <br> <br>
         
                 <button type="submit">submit</button>
-            </form>
-            
-            <form action="{% url 'logout' %}" method="POST" class="form">
-                {% csrf_token %}
-                <button type="submit">logout</button>
             </form>
         </article>
     {% endblock content %}
