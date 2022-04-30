@@ -16,10 +16,13 @@ def pantry_gallery_view(request):
     -----------
     rendered: A Rendered Page Object based on the html
     '''
-	return render(request, 'pantry/pantry.html', {
-		'pantry': Ingredients.objects.all().order_by('id'),
-		'add_form': AddIngredientForm()
-	})
+	if request.user.id is not None:
+		return render(request, 'pantry/pantry.html', {
+			'pantry': Ingredients.objects.all().order_by('id'),
+			'add_form': AddIngredientForm()
+		})
+	else:
+		return redirect('login')
 
 
 def pantry_add(request):

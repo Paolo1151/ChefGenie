@@ -19,7 +19,10 @@ def recipe_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
-    return render(request, 'recipe/recipehome.html')
+    if request.user.id is not None:
+        return render(request, 'recipe/recipehome.html')
+    else:
+        return redirect('login')
 
 def analytics_home(request):
     '''
@@ -55,10 +58,7 @@ def recipe_recommend(request):
     form = SearchForm(request.POST)
 
     # Generate Search Config
-    if 'filter_enabled' in request.POST:
-        search_config = SearchConfig.create_new(request.POST)
-    else:
-        search_config = None
+    search_config = SearchConfig.create_new(request.POST)
 
     # Check if the Search Term is Valid
     if form.is_valid():

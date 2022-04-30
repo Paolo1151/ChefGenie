@@ -96,27 +96,20 @@ class NLPModel:
         self.recipes = []
         with psycopg2.connect(NLPModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
-                if search_config:
-                    table_creation_query, filtered_recipes_query = search_config.to_sql()
-                    curs.execute(table_creation_query)
-                    curs.execute(filtered_recipes_query)
-                else:
-                    curs.execute('SELECT * FROM recipe_recipe')
-
-
+                search_query = search_config.to_sql()
+                print(search_query)
+                curs.execute(search_query)
+            
                 for params in curs:
-                    tags = params[-2].split()
-                    recipe = Recipe(*params[:-2], tags=tags)
+                    tags = params[-1].split()
+                    recipe = Recipe(*params[:-1], tags=tags)
                     recipe.set_similarity(self.compare(processed_text, recipe.get_tags()))
                     self.recipes.append(recipe)
 
-                if search_config:
-                    curs.execute('DROP TABLE total_calories_lookup;')
+                curs.execute('DROP TABLE total_calories_lookup;')
 
 
         self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
-
-        
 
         return self.serialize_recipes()
 
