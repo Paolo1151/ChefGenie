@@ -17,7 +17,18 @@ class AnalyticsEngine(BaseModel):
         super().__init__('Analytics Model v1')
 
     @staticmethod
-    def analyze_calorie_intake(user_id):
+    def generate_last_n_days(n):
+        today = datetime.datetime.today()
+        date_df = pd.date_range(
+            end=f'{today.day}/{today.month}/{today.year}',
+            periods=n,
+            freq='D'
+        )
+        return pd.DataFrame(date_df, columns=['date'])
+
+
+    @staticmethod
+    def analyze_calorie_intake(user_id, days_offset):
         with psycopg2.connect(BaseModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 with open(os.path.join(os.path.dirname(__file__), 'scripts', 'calorie_intake.sql')) as query:
@@ -33,13 +44,10 @@ class AnalyticsEngine(BaseModel):
                     df = pd.DataFrame(meal_history)
                     df['date'] = pd.to_datetime(df['date'])
 
-                    today = datetime.datetime.today()
-                    date_df = pd.DataFrame([today - datetime.timedelta(days=offset) for offset in range(0, 7)], columns=['date'])
-
-                    merged_df = date_df.join(df, on='date', lsuffix='_x', rsuffix='_y', sort=True)
-
-                    merged_df.drop(columns=['date_x', 'date_y'], inplace=True)
-                    merged_df = merged_df.fillna(0)
+                    date_df = AnalyticsEngine.generate_last_n_days(days_offset)
+                    
+                    merged_df = date_df.merge(df, left_on='date', right_on='date', how='left')
+                    merged_df = merged_df.fillna(0).sort_values(by='date', ascending=False)
 
                     print(merged_df)
 
@@ -55,7 +63,7 @@ class AnalyticsEngine(BaseModel):
         
         max_cal = max(df['calories']) + 10
 
-        plt.ylim(-1, max_cal)
+        plt.ylim(-0.05*max_cal, max_cal)
 
         flike = BytesIO()
         fig.savefig(flike)
