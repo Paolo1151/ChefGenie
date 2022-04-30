@@ -39,9 +39,6 @@ class SearchEngine(RecipeModel):
 
         self.partition_results(calorie_goal)
 
-        print(SearchEngine.package_recipes(self.recipes))
-        print(SearchEngine.package_recipes(self.goal_recipes))
-
         return dict(
             goal_recipes=SearchEngine.package_recipes(self.goal_recipes),
             other_recipes=SearchEngine.package_recipes(self.recipes)
