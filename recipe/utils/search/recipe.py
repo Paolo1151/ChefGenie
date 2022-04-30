@@ -14,7 +14,7 @@ class Recipe:
         '''
         self.id = id
         self.name = name
-        self.tags = tags
+        self.tags = tags.split()
         self.similarity = 0
     
     def get_name(self):

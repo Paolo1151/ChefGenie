@@ -16,8 +16,8 @@ from decouple import config
 import os
 import django_heroku
 
-from recipe.search_engine.nlpmodel import NLPModel
-from recipe.analytics_engine.analyticsmodel import AnalyticsModel
+from recipe.utils.search.engine import SearchEngine
+from recipe.utils.analytics.engine import AnalyticsEngine
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,10 +151,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # NLP Model
-NLP_MODEL = NLPModel('recipe_recipe')
+SEARCH_ENGINE = SearchEngine()
 
 # Analytics Model
-ANALYTICS_MODEL = AnalyticsModel()
+ANALYTICS_ENGINE = AnalyticsEngine()
 
 # Heroku Settings
 django_heroku.settings(locals())

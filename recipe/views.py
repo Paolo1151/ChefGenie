@@ -1,16 +1,26 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render
+from django.shortcuts import reverse
+from django.shortcuts import redirect
+
 from django.contrib import messages
 
-from chefgenie.settings import BASE_DIR, NLP_MODEL, ANALYTICS_MODEL
+from chefgenie.settings import BASE_DIR
+from chefgenie.settings import SEARCH_ENGINE
+from chefgenie.settings import ANALYTICS_ENGINE
 
+from .forms import SearchForm
+from .forms import ReviewForm
+from .forms import MealmadeForm
 
-from .forms import SearchForm, ReviewForm, MealmadeForm
-from .models import Recipe, Requirement, RecipeReview, Mealmade
-from .search_engine.filters import SearchConfig
+from .models import Recipe
+from .models import Requirement
+from .models import RecipeReview
+from .models import Mealmade
 
-from datetime import datetime as date
+from .utils import search
+from .utils.search.config import SearchConfig
+from .utils import analytics
 
-import psycopg2
 
 def recipe_home(request):
     '''
@@ -24,6 +34,7 @@ def recipe_home(request):
     else:
         return redirect('login')
 
+
 def analytics_home(request):
     '''
     Render the Home page of the Recipes HTML
@@ -32,7 +43,7 @@ def analytics_home(request):
         Request is assumed to be a GET protocol 
     '''
     if request.user.id is not None:
-        context = ANALYTICS_MODEL.make_graph(request.user.id)
+        context = ANALYTICS_ENGINE.analyze_calorie_intake(request.user.id)
         return render(request, 'recipe/analytics.html', context)
     else:
         return redirect('login')
@@ -64,7 +75,7 @@ def recipe_recommend(request):
     if form.is_valid():
             prompt = form.cleaned_data.get('search_term')  
             request.session['prompt'] = prompt
-            request.session['recommendations'] = NLP_MODEL.generate_recommendations(prompt, search_config)
+            request.session['recommendations'] = SEARCH_ENGINE.generate_search_recommendations(prompt, search_config)
 
     # Redirect to the Recipe Results
     return redirect('recipe_results')
@@ -77,7 +88,7 @@ def recipe_results(request):
     else:
         return redirect('recipe_home')
 
-# Displaying individual Recipe pages
+
 def recipe_details(request, pk):
     '''
     Display the details of the clicked recipe
@@ -103,6 +114,7 @@ def recipe_details(request, pk):
         }
     )
 
+
 def make_recipe(request, pk):
     url = request.META.get('HTTP_REFERER')
     recipe_id = pk
@@ -114,10 +126,10 @@ def make_recipe(request, pk):
             consume.recipe_id = recipe_id
             consume.user_id = request.user.id
             consume.amount = form.cleaned_data['amount']
-            #consume.date = date.today
             consume.save()
         messages.success(request, 'Thank you! This meal has been added to your history.')
     return redirect(url)
+
 
 def submit_review(request, recipe_id):
     '''

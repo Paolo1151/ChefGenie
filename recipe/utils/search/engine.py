@@ -1,28 +1,23 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from decouple import config
+from recipe.utils.base.model import BaseModel
 
 from .recipe import Recipe
-from .filters import SearchConfig
 
 import pandas as pd
 import numpy as np
-
-
 import spacy
-import joblib
-import os
 import psycopg2
 
-class NLPModel:
-    def __init__(self, pool_table):
+class SearchEngine(BaseModel):
+    def __init__(self):
         '''Create an NLP Processor with an internal nlp object for nlp operations'''
+        super().__init__('NLPModel v1')
+        
         try:
             self.nlp = spacy.load('en_core_web_md')
         except:
             spacy.cli.download('en_core_web_md')
             self.nlp = spacy.load('en_core_web_md')
-
-        print('Initialized NLPModel...')
 
     def process(self, text):
         '''
@@ -79,7 +74,7 @@ class NLPModel:
 
         return doc1.similarity(doc2)
 
-    def generate_recommendations(self, prompt, search_config):
+    def generate_search_recommendations(self, prompt, search_config):
         '''
         Generate the Recommendations based on a prompt and a search Config
 
@@ -94,10 +89,37 @@ class NLPModel:
         processed_text = self.process(prompt)
 
         self.recipes = []
-        with psycopg2.connect(NLPModel.get_connection_string()) as conn:
+        with psycopg2.connect(BaseModel.get_connection_string()) as conn:
+            with conn.cursor() as curs:
+                search_query = search_config.generate_query()
+                curs.execute(search_query)
+            
+                for params in curs:
+                    recipe = Recipe(*params)
+                    self.recipes.append(recipe)
+
+                curs.execute('DROP TABLE total_calories_lookup;')
+
+        return self.serialize_recipes()
+    
+    def generate_user_recommendations(self, user_id):
+        '''
+        Generate "you may like these" Recommendations in the home page for the user based on their history.
+
+
+        Calculate predicted score for user. 
+        - Features:
+            - InterestScore_{Recipe}
+        
+        InterestScore = Total_Amount_made * Review_Score + 
+
+        '''
+        
+        self.recipes = []
+
+        with psycopg2.connect(BaseModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 search_query = search_config.to_sql()
-                print(search_query)
                 curs.execute(search_query)
             
                 for params in curs:
@@ -108,28 +130,12 @@ class NLPModel:
 
                 curs.execute('DROP TABLE total_calories_lookup;')
 
-
         self.recipes = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)
 
         return self.serialize_recipes()
-
-    @staticmethod
-    def load_model():
-        return joblib.load(os.path.join(os.path.dirname(__file__), 'models', 'nlpmodel.joblib'))
-
-    def save_model(self):
-        joblib.dump(self, os.path.join(os.path.dirname(__file__), 'models', 'nlpmodel.joblib'))
 
     def serialize_recipes(self):
         serialized_recipes = []
         for recipe in self.recipes:
             serialized_recipes.append(recipe.__dict__)
         return serialized_recipes
-
-    @staticmethod
-    def get_connection_string():
-        dbname = config('DBNAME')
-        user = config('USER')
-        password = config('PASSWORD')
-        host = config('HOST')
-        return f'dbname={dbname} user={user} password={password} host={host}'
