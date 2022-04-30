@@ -26,12 +26,11 @@ class AnalyticsEngine(BaseModel):
         )
         return pd.DataFrame(date_df, columns=['date'])
 
-
     @staticmethod
     def analyze_calorie_intake(user_id, days_offset):
         with psycopg2.connect(BaseModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
-                with open(os.path.join(os.path.dirname(__file__), 'scripts', 'calorie_intake.sql')) as query:
+                with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'calorie_intake_all.sql')) as query:
                     intake_query = query.read()
                     intake_query = intake_query.replace('[USERID]', str(user_id))
                     curs.execute(intake_query)
@@ -59,9 +58,9 @@ class AnalyticsEngine(BaseModel):
         plt.xticks(rotation=45)
         plt.tight_layout()
         
-        max_cal = max(df['calories']) + 10
+        max_cal = max(df['calories'])
 
-        plt.ylim(-0.05*max_cal, max_cal)
+        plt.ylim(-0.05*max_cal, max_cal*1.05)
 
         flike = BytesIO()
         fig.savefig(flike)

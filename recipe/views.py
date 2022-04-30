@@ -16,6 +16,7 @@ from .models import Recipe
 from .models import Requirement
 from .models import RecipeReview
 from .models import Mealmade
+from login.models import UserAccount
 
 from .utils import search
 from .utils.search.config import SearchConfig
@@ -69,13 +70,15 @@ def recipe_recommend(request):
     form = SearchForm(request.POST)
 
     # Generate Search Config
-    search_config = SearchConfig.create_new(request.POST)
+    search_config = SearchConfig.create_new(request.POST, UserAccount.objects.get(user_id=request.user.id))
 
     # Check if the Search Term is Valid
     if form.is_valid():
             prompt = form.cleaned_data.get('search_term')  
             request.session['prompt'] = prompt
-            request.session['recommendations'] = SEARCH_ENGINE.generate_search_recommendations(prompt, search_config)
+            results = SEARCH_ENGINE.generate_search_results(prompt, search_config)
+            request.session['result_goal'] = results['goal_recipes']
+            request.session['result_other'] = results['other_recipes']
 
     # Redirect to the Recipe Results
     return redirect('recipe_results')

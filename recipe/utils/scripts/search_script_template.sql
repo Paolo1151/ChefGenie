@@ -19,7 +19,8 @@ GROUP BY
 SELECT
     tcl.id,
     tcl.name,
-    tcl.tags
+    tcl.tags,
+    tcl.total_calories
 FROM
     total_calories_lookup tcl
     LEFT JOIN recipe_recipereview rr on tcl.id = rr.recipe_id

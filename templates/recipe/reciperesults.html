@@ -15,7 +15,9 @@
             </h4>
         </center>
     {% else %}
-        {% for recipe in request.session.recommendations %}
+
+        <center><h2 style="color: white;">Recommendations based on your Goal<h2></center>
+        {% for recipe in request.session.result_goal %}
             <article>
                 <header>
                     <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
@@ -31,5 +33,25 @@
                 <!-- More Descriptors to be added in the future -->
             </article>
         {% endfor %}
+        
+        <hr>
+
+        <center><h2 style="color: white;">Other Recipes<h2></center>
+            {% for recipe in request.session.result_other %}
+                <article>
+                    <header>
+                        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+                    </header>
+    
+                    <table>
+                        <tr>
+                            {% for tag in recipe.tags %}
+                                <td>{{ tag }}</td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                    <!-- More Descriptors to be added in the future -->
+                </article>
+            {% endfor %}
     {% endif %}
 {% endblock content %}

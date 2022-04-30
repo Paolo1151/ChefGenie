@@ -1,14 +1,40 @@
 from recipe.utils.base.model import BaseObject
-
-from .filters import TermFilter
-from .filters import CalorieFilter
-from .filters import IngredientFilter
+from recipe.utils.base.sql import SqlFilter
 
 import os
 
+class TermFilter(SqlFilter):
+    def __init__(self, term):
+        super().__init__('Term Filter')
+        self.term = term.lower()
+
+    def to_sql(self):  
+        return self.parse_filter(f"LOWER(tcl.name) LIKE '%{self.term}%' OR LOWER(tcl.tags) LIKE '%{self.term}%' OR LOWER(rr.comment) LIKE '%{self.term}%'")
+
+
+class CalorieFilter(SqlFilter):
+    def __init__(self, min_calories, max_calories):
+        super().__init__('Calorie Filter')
+        self.min_calories = min_calories
+        self.max_calories = max_calories
+    
+    def to_sql(self):
+        return self.parse_filter(f'Y.total_calories >= {self.min_calories} AND Y.total_calories <= {self.max_calories}')
+
+
+class IngredientFilter(SqlFilter):
+    def __init__(self, ingredient):
+        super().__init__('Ingredient Filter')
+        self.ingredient = ingredient.lower()
+
+    def to_sql(self):
+        return self.parse_filter(f"LOWER(Z.name) NOT LIKE '%{self.ingredient}%' AND LOWER(Y.tags) NOT LIKE '%{self.ingredient}%'")
+
+
 class SearchConfig(BaseObject):
-    def __init__(self):
+    def __init__(self, user):
         super().__init__("Search Config v1")
+        self.user = user
         self.filters = []
 
     def append_term_filter(self, full_term):
@@ -23,8 +49,8 @@ class SearchConfig(BaseObject):
         self.filters.append(IngredientFilter(ingredient))
 
     @staticmethod
-    def create_new(request_post):
-        search_config = SearchConfig()
+    def create_new(request_post, user):
+        search_config = SearchConfig(user)
         
         # Create Search Filter
         search_config.append_term_filter(request_post['search_term'])
@@ -54,7 +80,7 @@ class SearchConfig(BaseObject):
         return query.replace('\n[Filters]', ';')
 
     def generate_query(self):
-        with open(os.path.join(os.path.dirname(__file__), 'scripts', 'search_script_template.sql')) as template:
+        with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'search_script_template.sql')) as template:
             search_query = template.read()
 
             self.filters[-1].toggle_last()
