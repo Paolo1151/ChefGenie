@@ -18,12 +18,10 @@ import base64
 
 class AnalyticsModel:
     def __init__(self):
-        print(matplotlib.get_backend())
         print('Initialized Analytics Model...')
 
     @staticmethod
     def make_graph(user_id):
-        print(AnalyticsModel.get_connection_string())
         with psycopg2.connect(AnalyticsModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 curs.execute(
