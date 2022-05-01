@@ -1,11 +1,14 @@
 function show_filter_options(){
     var div_filters = document.getElementsByClassName("filter_options")[0];
     var filters = document.getElementById("filter_options_enable");
+    var filters_label = document.getElementsByClassName("filter_options_enable")[0];
 
     if (filters.checked === true){
         div_filters.style.display = "block";
+        filters_label.innerHTML = "Disable Filters";
     } else {
         div_filters.style.display = "none";
+        filters_label.innerHTML = "Enable Filters";
     }
 
     set_input_disability();

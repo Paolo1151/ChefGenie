@@ -95,7 +95,7 @@ hr{
     text-align: center;
 }
 
-button {
+button, .button {
     display: inline-block;
     background-color: #bf9270;
     color: white;
@@ -111,8 +111,9 @@ button a{
     color: #FFF;
 }
 
-button:hover {
-background-color: #b98760;
+.filter_options_enable:hover, button:hover {
+    color: white;
+    background-color: #b98760;
 }
 
 #searchprompt {
@@ -171,7 +172,7 @@ h5.pantry_quantity
     margin: 20px auto;
     padding: 20px;
     border-radius: 5px;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.75);
     display: block;
 }
 
@@ -270,3 +271,14 @@ hr.solid {
 }
 
 .login-now:link { text-decoration: none; }
+
+.filter_options_enable{
+    margin: 20px 0px 10px 0px;
+}
+
+#filter_options_enable {
+    position: relative;
+    top: -20px;
+    left: -75px;
+    opacity: 0;
+}
