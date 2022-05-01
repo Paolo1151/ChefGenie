@@ -33,7 +33,7 @@ class SignupForm(forms.ModelForm):
 class EditAccountForm(forms.ModelForm):
     class Meta:
         model = UserAccount
-        fields = ['weight', 'height', 'weight_goal', 'calorie_goal']
+        fields = ['weight', 'height', 'weight_goal', 'calorie_goal', 'profile_picture']
 
     def clean(self):
         cleaned_data = super(EditAccountForm, self).clean()
