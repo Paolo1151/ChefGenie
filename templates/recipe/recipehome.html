@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+<nav>
+    <ul>
+        <li><a href="/account">account</a></li>
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a class="active" href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
 <center>
     <form action="/recipe/recommend" method="post" class="search_interface">
         {% csrf_token %}

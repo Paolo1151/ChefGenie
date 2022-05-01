@@ -6,6 +6,19 @@
     {% endblock %}
 
     {% block content %}
+        <nav>
+            <ul>
+                {% if user_index != 0 %}
+                    <li><a class="active" href="/account">account</a></li>
+                {% else %}
+                    <li><a href="/login">account</a></li>
+                {% endif %}
+                <li><a href="/analytics">analytics</a></li>
+                <li><a href="/pantry">pantry</a></li>
+                <li><a href="/recipe">recipes</a></li>
+                <li><a href="/">home</a></li>
+            </ul>
+        </nav>
         <article>
             <header>
                 <h1>account</h1>

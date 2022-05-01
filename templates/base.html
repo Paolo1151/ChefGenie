@@ -10,19 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <nav>
-        <ul>
-            {% if user_index != 0 %}
-                <li><a class="active" href="/account">account</a></li>
-            {% else %}
-                <li><a class="active" href="/login">login</a></li>
-            {% endif %}
-            <li><a href="/analytics">analytics</a></li>
-            <li><a href="/pantry">pantry</a></li>
-            <li><a href="/recipe">recipes</a></li>
-            <li><a href="/">home</a></li>
-        </ul>
-    </nav>
     {% block content %}{% endblock content %}
     {% block scripts %}{% endblock scripts %}
 </body>
