@@ -129,6 +129,7 @@ button a{
     align-items: center;
     grid-template-columns: repeat(6, 4fr);
     gap: 20px;
+    width: max-content;
 } 
 
 #pantry_item
@@ -162,12 +163,24 @@ h5.pantry_quantity
 
 #pantry_add_form
 {
-    margin-left:20px;
-    padding:10px;
+    margin-left: 20px;
+    padding: 10px;
     border-radius: 10px;
-    width: 35%;
+    width: max-content;
     background-color: #ffeddb;
 }
+
+#pantry_add_form > form
+{
+    display: flex;
+    align-items: center;
+}
+
+#pantry_add_form > form > *
+{
+    margin: 0px 10px 0px 10px;
+}
+
 .search_interface{
     margin: 20px auto;
     padding: 20px;
