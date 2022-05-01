@@ -1,17 +1,27 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render
+from django.shortcuts import reverse
+from django.shortcuts import redirect
+
 from django.contrib import messages
 
-from chefgenie.settings import BASE_DIR, NLP_MODEL
+from chefgenie.settings import BASE_DIR
+from chefgenie.settings import SEARCH_ENGINE
+from chefgenie.settings import ANALYTICS_ENGINE
 
-from .forms import SearchForm, ReviewForm
-from .models import Recipe, Requirement, RecipeReview
-from .search_engine.nlpmodel import NLPModel
-from .search_engine.filters import SearchConfig
+from .forms import SearchForm
+from .forms import ReviewForm
+from .forms import MealmadeForm
 
-from analytics.models import Mealmade
+from .models import Recipe
+from .models import Requirement
+from .models import RecipeReview
+from .models import Mealmade
+from login.models import UserAccount
 
+from .utils import search
+from .utils.search.config import SearchConfig
+from .utils import analytics
 
-import psycopg2
 
 def recipe_home(request):
     '''
@@ -20,7 +30,24 @@ def recipe_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
-    return render(request, 'recipe/recipehome.html')
+    if request.user.id is not None:
+        return render(request, 'recipe/recipehome.html')
+    else:
+        return redirect('login')
+
+
+def analytics_home(request):
+    '''
+    Render the Home page of the Recipes HTML
+    
+    request : Django Request object
+        Request is assumed to be a GET protocol 
+    '''
+    if request.user.id is not None:
+        context = ANALYTICS_ENGINE.analyze_calorie_intake(request.user.id, 7)
+        return render(request, 'recipe/analytics.html', context)
+    else:
+        return redirect('login')
 
 
 def recipe_recommend(request):
@@ -43,16 +70,15 @@ def recipe_recommend(request):
     form = SearchForm(request.POST)
 
     # Generate Search Config
-    if 'filter_enabled' in request.POST:
-        search_config = SearchConfig.create_new(request.POST)
-    else:
-        search_config = None
+    search_config = SearchConfig.create_new(request.POST, UserAccount.objects.get(user_id=request.user.id))
 
     # Check if the Search Term is Valid
     if form.is_valid():
             prompt = form.cleaned_data.get('search_term')  
             request.session['prompt'] = prompt
-            request.session['recommendations'] = NLP_MODEL.generate_recommendations(prompt, search_config)
+            results = SEARCH_ENGINE.generate_search_results(prompt, search_config)
+            request.session['result_goal'] = results['goal_recipes']
+            request.session['result_other'] = results['other_recipes']
 
     # Redirect to the Recipe Results
     return redirect('recipe_results')
@@ -60,12 +86,12 @@ def recipe_recommend(request):
 
 def recipe_results(request):
     '''Render the recommendations if it exists'''
-    if 'recommendations' in request.session:
+    if 'result_goal' in request.session and 'result_other' in request.session:
         return render(request, 'recipe/reciperesults.html')
     else:
         return redirect('recipe_home')
 
-# Displaying individual Recipe pages
+
 def recipe_details(request, pk):
     '''
     Display the details of the clicked recipe
@@ -91,12 +117,22 @@ def recipe_details(request, pk):
         }
     )
 
+
 def make_recipe(request, pk):
-    user_id = request.user.id
-
+    url = request.META.get('HTTP_REFERER')
+    recipe_id = pk
     # Record the new recipe with the user id
+    if request.method == 'POST':
+        form = MealmadeForm(request.POST)
+        if form.is_valid():
+            consume = Mealmade()
+            consume.recipe_id = recipe_id
+            consume.user_id = request.user.id
+            consume.amount = form.cleaned_data['amount']
+            consume.save()
+        messages.success(request, 'Thank you! This meal has been added to your history.')
+    return redirect(url)
 
-    pass
 
 def submit_review(request, recipe_id):
     '''

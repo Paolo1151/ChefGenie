@@ -1,5 +1,6 @@
 from django.db import models
 from login.models import UserAccount
+from datetime import datetime
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
@@ -27,3 +28,9 @@ class RecipeReview(models.Model):
     comment = models.CharField(max_length=250, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Mealmade(models.Model):
+	recipe = models.ForeignKey(Recipe,null=True, on_delete=models.CASCADE)
+	amount = models.FloatField()
+	date = models.DateField(default=datetime.now)
+	user = models.ForeignKey(UserAccount,null=True,on_delete=models.CASCADE)

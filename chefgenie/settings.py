@@ -14,8 +14,10 @@ from pathlib import Path
 from decouple import config
 
 import os
+import django_heroku
 
-from recipe.search_engine.nlpmodel import NLPModel
+from recipe.utils.search.engine import SearchEngine
+from recipe.utils.analytics.engine import AnalyticsEngine
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,7 +48,6 @@ INSTALLED_APPS = [
     'login',
     'pantry',
     'recipe',
-    'analytics',
 ]
 
 MIDDLEWARE = [
@@ -95,7 +96,8 @@ AUTH_USER_MODEL = 'login.Account'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chefgenie',
+        'HOST': config('HOST'),
+        'NAME': config('DBNAME'),
         'USER' : config('USER'),
         'PASSWORD': config('PASSWORD'),
     }
@@ -149,4 +151,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # NLP Model
-NLP_MODEL = NLPModel('recipe_recipe')
+SEARCH_ENGINE = SearchEngine()
+
+# Analytics Model
+ANALYTICS_ENGINE = AnalyticsEngine()
+
+# Heroku Settings
+django_heroku.settings(locals())

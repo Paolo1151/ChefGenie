@@ -28,6 +28,24 @@
     </article>
 
     <article>
+        <form action="{% url 'make_recipe' recipe.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="make-form">
+                <input type="number" name="amount" min="0.01" step="0.01">
+                <p>Add to meal history?</p>
+                {% if user.is_authenticated %}
+                <button type="submit">Make Meal</button>
+                {% else %}
+                <p>You must be logged in to add a meal to your history.&nbsp;
+                    <span><a href={% url 'login' %} class="login-now">Login now.</a></span>
+                </p>
+                {% endif %}
+            </div>
+        </form>
+        <hr class="solid">
+    </article>
+
+    <article>
         <form action="{% url 'submit_review' recipe.id %}" method="POST">
             {% csrf_token %}
             <div class="review-form">
