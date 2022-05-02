@@ -79,25 +79,32 @@ def signup_view(request):
     return render(request, 'login/signup.html', context)
 
 def edit_account_view(request):
+    username_message = None
+    password_message = None
     if request.user.id is not None:
         account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
+        form = EditUsername(request.GET, instance=user)
+        password_form = EditPassword(request.GET, instance=account)
+        form.fields['username'].widget.attrs = {'value': account.username, 'class': 'account_field'}
+        password_form.fields['password'].widget.attrs = {'placeholder': 'password', 'class': 'account_field'}
+        password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'confirm password', 'class': 'account_field'}
         if request.method == 'POST':
             form = EditUsername(request.POST, instance=user)
             password_form = EditPassword(request.POST, instance=account)
             if form.is_valid():
-                account.username = form.cleaned_data['username']
-                account.save()
-                return redirect('/account')
+                if Account.objects.filter(username=form.cleaned_data['username']).exists():
+                    username_message = 'username taken'
+                    context = {'user': user, 'form': form, 'account': account, 'password_form': password_form, 'username_message': username_message}
+                    return render(request, 'login/edit_account.html', context)
+                else:
+                    account.username = form.cleaned_data['username']
+                    account.save()
+                    return redirect('/account')
             else:
                 return redirect('edit_account')
         else:
-            form = EditUsername(request.GET, instance=user)
-            password_form = EditPassword(request.GET, instance=account)
-            form.fields['username'].widget.attrs = {'value': account.username, 'class': 'account_field'}
-            password_form.fields['password'].widget.attrs = {'placeholder': 'password', 'class': 'account_field'}
-            password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'confirm password', 'class': 'account_field'}
-            context = {'user': user, 'form': form, 'account': account, 'password_form': password_form, 'message': message}
+            context = {'user': user, 'form': form, 'account': account, 'password_form': password_form, 'username_message': username_message}
             return render(request, 'login/edit_account.html', context)
     else:
         return redirect('login')
