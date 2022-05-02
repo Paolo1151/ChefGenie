@@ -64,9 +64,8 @@ def login_view(request):
 
 
 def logout_view(request):
-    if request.method == 'POST':
-        auth.logout(request)
-        return redirect('login')
+    auth.logout(request)
+    return redirect('login')
 
 
 def signup_view(request):
@@ -105,8 +104,8 @@ def edit_account_view(request):
         form = EditUsername(request.GET, instance=user)
         password_form = EditPassword(request.GET, instance=account)
         form.fields['username'].widget.attrs = {'value': account.username, 'class': 'account_field'}
-        password_form.fields['password'].widget.attrs = {'placeholder': 'password', 'class': 'account_field'}
-        password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'confirm password', 'class': 'account_field'}
+        password_form.fields['password'].widget.attrs = {'placeholder': 'Password', 'class': 'account_field'}
+        password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'Confirm Password', 'class': 'account_field'}
         if request.method == 'POST':
             form = EditUsername(request.POST, instance=user)
             password_form = EditPassword(request.POST, instance=account)
@@ -133,7 +132,7 @@ def edit_password_view(request):
     if password_form.is_valid():
         if (password_form.cleaned_data['password'] != password_form.cleaned_data['confirm_password']):
             message = 'Passwords do not match'
-            return redirect('')
+            return redirect('account')
         elif password_form.is_valid():
             password = password_form.cleaned_data['password']
             account.set_password(password)

@@ -1,62 +1,65 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<nav>
+    <ul>
+        <a href="/"><img src="static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
+        <li><a href="/account">account</a></li>
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a class="active" href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
+<center>
+    <button style="margin: 20px 0px;" type="button" onclick="location.href = '/recipe';">Return to Search</button>
+    <h4 id="searchprompt">
+        Search Results based on: <u>{{ request.session.prompt }}</u>
+    </h4>
+</center>
 
-{% block content %}
-    <nav>
-        <ul>
-            <li><a href="/account">account</a></li>
-            <li><a href="/analytics">analytics</a></li>
-            <li><a href="/pantry">pantry</a></li>
-            <li><a class="active" href="/recipe">recipes</a></li>
-            <li><a href="/">home</a></li>
-        </ul>
-    </nav>
-    <center>
-        <button style="margin: 20px 0px;" type="button" onclick="location.href = '/recipe';">Return to Search</button>
-        <h4 id="searchprompt">
-            Search Results based on: <u>{{ request.session.prompt }}</u>
-        </h4>
-    </center>
+{% if not request.session.result_goal and not request.session.result_other %}
+<center>
+    <h4 style="color: white;">
+        No Results Found
+    </h4>
+</center>
+{% else %}
 
-    {% if not request.session.result_goal and not request.session.result_other %}
-        <center>
-            <h4 style="color: white;">
-                No Results Found
-            </h4>
-        </center>
-    {% else %}
-        
-        <center><h2 style="color: white;">Recommendations based on your Goal<h2></center>
-        {% for recipe in request.session.result_goal %}
-            <article>
-                <header>
-                    <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
-                </header>
+<center>
+    <h2 style="color: white;">Recommendations based on your Goal
+        <h2>
+</center>
+{% for recipe in request.session.result_goal %}
+<article>
+    <header>
+        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+    </header>
 
-                <div class="tags">
-                    {% for tag in recipe.tags %}
-                        <div class="tag">{{ tag }}</div>
-                    {% endfor %}
-                </div>
-                <!-- More Descriptors to be added in the future -->
-            </article>
+    <div class="tags">
+        {% for tag in recipe.tags %}
+        <div class="tag">{{ tag }}</div>
         {% endfor %}
-        
-        <hr class="recipes-hr">
+    </div>
+    <!-- More Descriptors to be added in the future -->
+</article>
+{% endfor %}
 
-        <center><h2 style="color: white;">Other Recipes<h2></center>
-            {% for recipe in request.session.result_other %}
-                <article>
-                    <header>
-                        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
-                    </header>
-    
-                    <div class="tags">
-                        {% for tag in recipe.tags %}
-                            <div class="tag">{{ tag }}</div>
-                        {% endfor %}
-                    </div>
-                    <!-- More Descriptors to be added in the future -->
-                </article>
-            {% endfor %}
-    {% endif %}
-{% endblock content %}
+<hr class="recipes-hr">
+
+<center>
+    <h2 style="color: white;">Other Recipes
+        <h2>
+</center>
+{% for recipe in request.session.result_other %}
+<article>
+    <header>
+        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+    </header>
+
+    <div class="tags">
+        {% for tag in recipe.tags %}
+        <div class="tag">{{ tag }}</div>
+        {% endfor %}
+    </div>
+    <!-- More Descriptors to be added in the future -->
+</article>
+{% endfor %} {% endif %} {% endblock content %}

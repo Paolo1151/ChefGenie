@@ -1,66 +1,152 @@
-{% extends 'base.html' %}
-
-{% if account %}
-    {% block title %}
-        <title>{{ account.username|capfirst }}'s Profile</title>
-    {% endblock %}
-
-    {% block content %}
-        <style>
-            .form{
-                margin: 5%;
-            }
-            .form input{
-                width: 10%;
-            }
-        </style>
-        <nav>
-            <ul>
-                {% if user_index != 0 %}
-                    <li><a class="active" href="/account">account</a></li>
-                {% else %}
-                    <li><a href="/login">account</a></li>
-                {% endif %}
-                <li><a href="/analytics">analytics</a></li>
-                <li><a href="/pantry">pantry</a></li>
-                <li><a href="/recipe">recipes</a></li>
-                <li><a href="/">home</a></li>
-            </ul>
-        </nav>
-        <article>
-            <header>
+{% extends 'base.html' %} {% if account %} {% block title %}
+<title>{{ account.username|capfirst }}'s Profile</title>
+{% endblock %} {% block content %}
+<style>
+    .form {
+        margin: 5%;
+    }
+    
+    .form input {
+        line-height: 1rem;
+        width: 90%;
+        font-size: 18px;
+    }
+    
+    .profilecontainer {
+        margin-top: 0px;
+        display: flex;
+    }
+    
+    .vitals {
+        width: 50%;
+    }
+    
+    .vitals input {
+        padding: 8px;
+        line-height: 3rem;
+        font-size: 20px;
+    }
+    
+    .vitals p {
+        font-weight: 500;
+    }
+    
+    .vitals h3 {
+        margin: 0px;
+    }
+    
+    header {
+        margin-bottom: -50px;
+    }
+    
+    header a,
+    header a:visited {
+        padding: 0px;
+        margin-left: 50px;
+        color: #bf9270;
+    }
+    
+    header h2 {
+        margin: 30px 50px;
+        font-size: 50px;
+        margin-bottom: -5px;
+    }
+    
+    button {
+        border-radius: 5px;
+        float: right;
+    }
+    
+    .accountheader {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .accountheader img {
+        border-radius: 5px;
+        height: 200px;
+        width: auto;
+        object-fit: cover
+    }
+    
+    #text {
+        display: none;
+    }
+    
+    #profile_picture-clear_id {
+        width: 10%;
+    }
+    
+    input#profile_picture-clear_id {
+        margin-right: -2.5%;
+    }
+    
+    .logoutbutton {
+        margin-top: -4.25%;
+    }
+</style>
+<nav>
+    <ul>
+        <a href="/"><img src="static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
+        {% if user_index != 0 %}
+        <li><a class="active" href="/account">account</a></li>
+        {% else %}
+        <li><a href="/login">account</a></li>
+        {% endif %}
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
+<article>
+    <header>
+        <div class="accountheader">
+            <div>
                 <h2>{{ account.username }}</h2>
-                {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="" style="height:300px; width:300px; object-fit: cover">
-                {% endif %}
-                <a href="edit_account">edit</a>
-            </header>
+                <a href="edit_account">Edit account details</a>
+            </div>
+            {% if user.profile_picture %}
+            <div>
+                <img src="{{ user.profile_picture.url }}" alt="" style=""> {% endif %}
+            </div>
+        </div>
+    </header>
 
-            <hr>
+    <form class="form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="profilecontainer">
+            <div class="vitals">
+                <h2 style="color:black">Weight (kg)</h2>
+                {{ form.weight }}
+                <h2 style="color:black">Height (cm)</h2>
+                {{ form.height }}
+                <h2 style="color:black">BMI</h2>
+                <input type="text" class="account_field" value="{{ user.bmi|floatformat:2 }}" readonly> <br> <br>
+            </div>
+            <div class="vitals">
+                <h2 style="color:black">Weight Goal (kg)</h2>
+                {{ form.weight_goal }}
+                <h2 style="color:black">Calorie Goal</h2>
+                {{ form.calorie_goal }}
+                <p>
+                    <h3>BMI Categories:</h3><br> Underweight =&lt; 18.5<br> Normal weight = 18.5–24.9<br> Overweight = 25–29.9 <br> Obesity = BMI of 30 or greater </p>
+            </div>
+        </div>
 
-            <form action="{% url 'logout' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">logout</button>
-            </form>
 
 
-            <form class="form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <h2 style="color:black">weight (kg)</h2>
-                {{ form.weight }} <br> <br>
-                <h2 style="color:black">height (cm)</h2>
-                {{ form.height }} <br> <br>
-                <h2 style="color:black">bmi</h2>
-                <input type="text" class="account_field" value="{{ user.bmi|floatformat:2 }}" readonly></input> <br> <br>
-                <h2 style="color:black">weight goal</h2>
-                {{ form.weight_goal }} <br> <br>
-                <h2 style="color:black">calorie goal</h2>
-                {{ form.calorie_goal }} <br> <br>
-                <h2 style="color:black">change profile picture</h2>
-                {{ form.profile_picture }} <br> <br>
-        
-                <button type="submit">save changes</button>
-            </form>
-        </article>
-    {% endblock content %}
-{% endif %}
+        <h2 style="color:black">Change Profile Picture</h2>
+        {{ form.profile_picture }} <br> <br>
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <form action="{% url 'logout' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="logoutbutton">Logout</button>
+
+    </form>
+</article>
+{% endblock content %} {% endif %}

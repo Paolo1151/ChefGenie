@@ -1,46 +1,94 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% if account %} {% block title %}
+<title>{{ account.username|capfirst }}'s Profile</title>
+{% endblock %} {% block content %}
+<style>
+    .account_field {
+        width: 30%;
+        padding: 12px 20px;
+        margin: 0 auto;
+        display: inline-block;
+        font-family: varela;
+        font-size: 1em;
+        text-align: left;
+        color: red;
+    }
+    
+    .form {
+        margin: 5%;
+    }
+    
+    .form input {
+        width: 90%;
+        padding: 8px;
+        line-height: 3rem;
+        font-size: 20px;
+    }
+    
+    header {
+        margin-bottom: -50px;
+    }
+    
+    header h2 {
+        margin: 30px 50px;
+        font-size: 50px;
+        margin-bottom: -5px;
+    }
+    
+    .form h2 {
+        color: black;
+    }
+    
+    button {
+        border-radius: 5px;
+        margin-bottom: -20px;
+    }
+    
+    .accountheader {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .accountheader img {
+        border-radius: 5px;
+        height: 200px;
+        width: auto;
+        object-fit: cover
+    }
+</style>
+<nav>
+    <ul>
+        <a href="/"><img src="static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
+        <li><a class="active" href="/account">account</a></li>
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
+<article>
+    <header>
+        <h2>Edit Account</h2>
+    </header>
+    <br>
+    <br>
 
-{% if account %}
-    {% block title %}
-        <title>{{ account.username|capfirst }}'s Profile</title>
-    {% endblock %}
 
-    {% block content %}
-        <nav>
-            <ul>
-                <li><a class="active" href="/account">account</a></li>
-                <li><a href="/analytics">analytics</a></li>
-                <li><a href="/pantry">pantry</a></li>
-                <li><a href="/recipe">recipes</a></li>
-                <li><a href="/">home</a></li>
-            </ul>
-        </nav>
-        <article>
-            <header>
-                <h1>edit account</h1>
-            </header>
+    <form class="form" method="post">
+        {% if username_message %}
+        <h2>{{ username_message }}</h2>
+        {% endif %} {% csrf_token %}
+        <h2>Username</h2>
+        {{ form.username }} <br> <br>
 
-            <hr>
-            
-            <form class="form" method="post">
-                {% if username_message %}
-                    <h2>{{ username_message }}</h2>
-                {% endif %}
-                {% csrf_token %}
-                <h2>username</h2>
-                {{ form.username }} <br> <br>
-        
-                <button type="submit">submit</button>
-            </form>
+        <button type="submit">Submit</button>
+    </form>
 
-            <form class="form" method="post" action="{% url 'edit_password' %}">
-                {% csrf_token %}
-                <h2>password</h2>
-                {{ password_form.password }} <br> <br>
-                {{ password_form.confirm_password }} <br> <br>
-        
-                <button type="submit">submit</button>
-            </form>
-        </article>
-    {% endblock content %}
-{% endif %}
+    <form class="form" method="post" action="{% url 'edit_password' %}">
+        {% csrf_token %}
+        <h2>Password</h2>
+        {{ password_form.password }} <br> <br> {{ password_form.confirm_password }} <br> <br>
+
+        <button type="submit">Submit</button>
+    </form>
+</article>
+{% endblock content %} {% endif %}

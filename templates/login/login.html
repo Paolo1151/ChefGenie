@@ -1,8 +1,7 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <nav>
     <ul>
+        <a href="/"><img src="static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
         <li><a href="/account">account</a></li>
         <li><a href="/analytics">analytics</a></li>
         <li><a href="/pantry">pantry</a></li>
@@ -12,16 +11,13 @@
 </nav>
 <center>
     <form class="form" method="post">
-        {% csrf_token %}
-            
-        {% if message != '' %}
-            <h2>{{ message }}</h2>
+        {% csrf_token %} {% if message != '' %}
+        <h2>{{ message }}</h2>
         {% endif %}
-        
+
         <h1>login</h1>
-        {{ form.username }}<br><br>
-        {{ form.password }}<br><br>
-        
+        {{ form.username }}<br><br> {{ form.password }}<br><br>
+
         <button type="submit">login</button><button onclick="location.href='/signup'" href="signup">signup</button>
     </form>
 </center>
