@@ -23,15 +23,21 @@
             <hr>
             
             <form class="form" method="post">
+                {% if username_message %}
+                    <h2>{{ username_message }}</h2>
+                {% endif %}
                 {% csrf_token %}
-                <h2>weight</h2>
-                {{ form.weight }} <br> <br>
-                <h2>height</h2>
-                {{ form.height }} <br> <br>
-                <h2>weight_goal</h2>
-                {{ form.weight_goal }} <br> <br>
-                <h2>calorie goal</h2>
-                {{ form.calorie_goal }} <br> <br>
+                <h2>username</h2>
+                {{ form.username }} <br> <br>
+        
+                <button type="submit">submit</button>
+            </form>
+
+            <form class="form" method="post" action="{% url 'edit_password' %}">
+                {% csrf_token %}
+                <h2>password</h2>
+                {{ password_form.password }} <br> <br>
+                {{ password_form.confirm_password }} <br> <br>
         
                 <button type="submit">submit</button>
             </form>

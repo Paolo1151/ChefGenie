@@ -288,6 +288,17 @@ hr.solid {
 
 .login-now:link { text-decoration: none; }
 
+.account_field{
+    width: 30%;
+    padding: 12px 20px;
+    margin: 0 auto;
+    display: inline-block;
+    border-bottom: 1px solid #ccc;
+    border-style: hidden hidden solid hidden;
+    font-family: varela;
+    font-size: 1em;
+    text-align: center;
+}
 .filter_options_enable{
     margin: 20px 0px 10px 0px;
 }

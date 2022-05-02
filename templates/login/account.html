@@ -6,6 +6,14 @@
     {% endblock %}
 
     {% block content %}
+        <style>
+            .form{
+                margin: 5%;
+            }
+            .form input{
+                width: 10%;
+            }
+        </style>
         <nav>
             <ul>
                 {% if user_index != 0 %}
@@ -21,27 +29,37 @@
         </nav>
         <article>
             <header>
-                <h1>account</h1>
+                <h2>{{ account.username }}</h2>
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" alt="" style="height:300px; width:300px; object-fit: cover">
+                {% endif %}
+                <a href="edit_account">edit</a>
             </header>
 
             <hr>
-            
-            <a href="/edit_account">edit</a>
-            <h2>username</h2>
-            <p>{{ account.username }}</p>
-            <h2>weight (kg)</h2>
-            <p>{{ user.weight }} kg</p>
-            <h2>height (cm)</h2>
-            <p>{{ user.height }} cm</p>
-            <h2>bmi</h2>
-            <p>{{ user.bmi|floatformat:2 }}</p>
-            <h2>weight goal</h2>
-            <p>{{ user.weight_goal }}</p>
-            <h2>calorie goal</h2>
-            <p>{{ user.calorie_goal }}</p>
+
             <form action="{% url 'logout' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit">logout</button>
+            </form>
+
+
+            <form class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h2 style="color:black">weight (kg)</h2>
+                {{ form.weight }} <br> <br>
+                <h2 style="color:black">height (cm)</h2>
+                {{ form.height }} <br> <br>
+                <h2 style="color:black">bmi</h2>
+                <input type="text" class="account_field" value="{{ user.bmi|floatformat:2 }}" readonly></input> <br> <br>
+                <h2 style="color:black">weight goal</h2>
+                {{ form.weight_goal }} <br> <br>
+                <h2 style="color:black">calorie goal</h2>
+                {{ form.calorie_goal }} <br> <br>
+                <h2 style="color:black">change profile picture</h2>
+                {{ form.profile_picture }} <br> <br>
+        
+                <button type="submit">save changes</button>
             </form>
         </article>
     {% endblock content %}
