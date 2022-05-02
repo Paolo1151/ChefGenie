@@ -114,7 +114,7 @@
             {% for review in reviews %}
                 <div class="review">
                     <div class="review-header">
-                        <div class="review-username">{{ review.user__user__username }}</div>
+                        <div class="review-username">{{ review.user__username }}</div>
                         <p>•</p>
                         <span class="stars">
                             <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
