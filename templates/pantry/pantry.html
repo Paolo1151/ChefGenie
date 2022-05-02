@@ -22,7 +22,7 @@
             <h3 style = "margin:0;padding:5px; text-align:center;">Add Ingredient</h3>
             <form action ='pantry/add' method ='POST' enctype="multipart/form-data">
                 {% csrf_token %}
-                <div>Name: {{ add_form.name }}</div>
+                <div>Name: {{ add_form.ingredient }}</div>
                 <div>Amount: {{ add_form.amount }}</div>
                 <input class="button" type="submit" value="Submit">
             </form>

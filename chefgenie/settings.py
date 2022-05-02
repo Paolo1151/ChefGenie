@@ -46,7 +46,6 @@ INSTALLED_APPS = [
 
     # Created Applications
     'login',
-    'pantry',
     'recipe',
 ]
 
