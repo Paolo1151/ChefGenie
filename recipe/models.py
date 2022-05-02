@@ -6,6 +6,7 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     unit = models.CharField(max_length=10)
     calories = models.FloatField()
+    category = models.CharField(max_length=100, default="")
 
 class Recipe(models.Model):
     name = models.CharField(max_length=150)

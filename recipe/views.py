@@ -44,7 +44,8 @@ def analytics_home(request):
         Request is assumed to be a GET protocol 
     '''
     if request.user.id is not None:
-        context = ANALYTICS_ENGINE.analyze_calorie_intake(request.user.id, 7)
+        context = ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7)
+        context['table'] = ANALYTICS_ENGINE.table_calorie_intake(request.user.id, 7)
         return render(request, 'recipe/analytics.html', context)
     else:
         return redirect('login')
