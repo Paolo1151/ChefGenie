@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib import messages, auth
 
 from .models import Account, UserAccount
-from .forms import LoginForm, SignupForm, EditAccountForm
+from .forms import LoginForm, SignupForm, EditAccountForm, EditUsername, EditPassword
 
 def account_view(request):
     if request.user.id is not None:
@@ -24,8 +24,6 @@ def account_view(request):
             return render(request, 'login/account.html', context)
     else:
         return redirect('login')
-
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -79,18 +77,41 @@ def signup_view(request):
 
 def edit_account_view(request):
     if request.user.id is not None:
+        account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
         if request.method == 'POST':
-            form = EditAccountForm(request.POST, instance=user)
-            form.save()
-            return redirect('/account')
+            form = EditUsername(request.POST, instance=user)
+            password_form = EditPassword(request.POST, instance=user)
+            if form.is_valid():
+                account.username = form.cleaned_data['username']
+                account.save()
+                return redirect('/account')
+            else:
+                return redirect('edit_account')
         else:
-            form = EditAccountForm(request.GET, instance=user)
-            form.fields['weight'].widget.attrs = {'value': user.weight, 'class': 'account_field'}
-            form.fields['height'].widget.attrs = {'value': user.height, 'class': 'account_field'}
-            form.fields['weight_goal'].widget.attrs = {'value': user.weight_goal, 'class': 'account_field'}
-            form.fields['calorie_goal'].widget.attrs = {'value': user.calorie_goal, 'class': 'account_field'}
-            context = {'user': user, 'form': form}
+            form = EditUsername(request.GET, instance=user)
+            password_form = EditPassword(request.GET, instance=user)
+            form.fields['username'].widget.attrs = {'value': account.username, 'class': 'account_field'}
+            password_form.fields['password'].widget.attrs = {'placeholder': 'password', 'class': 'account_field'}
+            password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'confirm password', 'class': 'account_field'}
+            context = {'user': user, 'form': form, 'account': account, 'password_form': password_form}
             return render(request, 'login/edit_account.html', context)
     else:
         return redirect('login')
+
+def edit_password_view(request):
+    print('edit password')
+    account = Account.objects.get(id=request.user.id)
+    user = UserAccount.objects.get(user_id=request.user.id)
+    form = EditPassword(request.POST, instance=user)
+    if form.cleaned_data['password'] != form.cleaned_data['confirm_password']:
+        message = 'Passwords do not match'
+        return redirect('account')
+    elif form.is_valid():
+        password = form.cleaned_data['password']
+        account.set_password(password)
+        account.save()
+        return redirect('account')
+    else:
+        message = 'Username or Email already taken!'
+    return redirect('edit_account')

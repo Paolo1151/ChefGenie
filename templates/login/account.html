@@ -18,7 +18,7 @@
             <header>
                 <h2>{{ account.username }}</h2>
                 {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="" height="300px">
+                    <img src="{{ user.profile_picture.url }}" alt="" style="height:300px; width:300px; object-fit: cover">
                 {% endif %}
                 <a href="edit_account">edit</a>
             </header>
@@ -43,7 +43,7 @@
                 {{ form.weight_goal }} <br> <br>
                 <h2 style="color:black">calorie goal</h2>
                 {{ form.calorie_goal }} <br> <br>
-                <h2 style="color:black">calorie goal</h2>
+                <h2 style="color:black">change profile picture</h2>
                 {{ form.profile_picture }} <br> <br>
         
                 <button type="submit">save changes</button>

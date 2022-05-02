@@ -51,3 +51,33 @@ class LoginForm(forms.ModelForm):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs = {'placeholder': 'username', 'class': 'input_field'}
         self.fields['password'].widget=forms.PasswordInput(attrs = {'placeholder': 'password', 'class': 'input_field'})
+
+class EditUsername(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['username']
+
+    def clean(self):
+        cleaned_data = super(EditUsername, self).clean()
+
+    def __init__(self, *args, **kwargs):
+        super(EditUsername, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs = {'class': 'account_field'}
+
+class EditPassword(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'password', 'class': 'account_field'
+    }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'confirm password', 'class': 'account_field'
+    }))
+
+    class Meta:
+        model = Account
+        fields = ['password']
+
+    def clean(self):
+        cleaned_data = super(EditPassword, self).clean()
+
+    def __init__(self, *args, **kwargs):
+        super(EditPassword, self).__init__(*args, **kwargs)
