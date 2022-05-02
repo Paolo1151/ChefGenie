@@ -35,10 +35,12 @@ def login_view(request):
     context= {'message': message, 'form': form}
     return render(request, 'login/login.html', context)
 
+
 def logout_view(request):
     if request.method == 'POST':
         auth.logout(request)
         return redirect('login')
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -65,6 +67,7 @@ def signup_view(request):
 
     context = {'message': message, 'form': form}
     return render(request, 'login/signup.html', context)
+
 
 def edit_account_view(request):
     if request.user.id is not None:

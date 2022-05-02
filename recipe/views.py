@@ -115,24 +115,36 @@ def recipe_details(request, pk):
             'recipe_tags': recipe.tags.split(" "),
             'recipe_ingredients': Requirement.objects.select_related('recipe').select_related('ingredient').filter(recipe_id=recipe.id),
             'recipe_steps': recipe.steps.split(" | "),
-            'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__user__username', 'rating', 'comment')
+            'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__username', 'rating', 'comment')
         }
     )
 
 
 def make_recipe(request, pk):
     url = request.META.get('HTTP_REFERER')
+    request.session['is_insufficient'] = False
     recipe_id = pk
-    # Record the new recipe with the user id
     if request.method == 'POST':
         form = MealmadeForm(request.POST)
         if form.is_valid():
-            consume = Mealmade()
-            consume.recipe_id = recipe_id
-            consume.user_id = request.user.id
-            consume.amount = form.cleaned_data['amount']
-            consume.save()
-        messages.success(request, 'Thank you! This meal has been added to your history.')
+            missing, to_update = settings.VALIDATOR.validate(pk, form.cleaned_data['amount'])
+            if not missing:
+                consume = Mealmade()
+                consume.recipe_id = recipe_id
+                consume.user_id = request.user.id
+                consume.amount = form.cleaned_data['amount']
+                consume.save()
+
+                for rid, consumed in to_update:
+                    ingredient = UserPantry.objects.get(ingredient__id=rid, user__id=request.user.id)
+                    ingredient.amount -= consumed
+                    ingredient.save()
+
+                messages.success(request, 'Thank you! This meal has been added to your history.', extra_tags='meal')
+            else:
+                request.session['requirements'] = missing
+                request.session['is_insufficient'] = True
+                messages.warning(request, 'Insufficient Ingredients for Recipe!', extra_tags='meal')
     return redirect(url)
 
 
@@ -158,7 +170,7 @@ def submit_review(request, recipe_id):
             form = ReviewForm(request.POST, instance=review)
             form.save()
             
-            messages.success(request, 'Thank you! Your review has been updated.')
+            messages.success(request, 'Thank you! Your review has been updated.', extra_tags='review')
         except RecipeReview.DoesNotExist:
             form = ReviewForm(request.POST)
             if form.is_valid():
@@ -169,7 +181,7 @@ def submit_review(request, recipe_id):
                 data.user_id = request.user.id
                 data.save()
 
-                messages.success(request, 'Thank you! Your review has been posted.')
+                messages.success(request, 'Thank you! Your review has been posted.', extra_tags='review')
     
     return redirect(url)
 
@@ -220,7 +232,7 @@ def pantry_add(request):
 
 
 def pantry_delete(request, id):
-	'''
+    '''
 	Defines the Deletion of a specific pantry entity
 
 	Parameters
@@ -234,9 +246,9 @@ def pantry_delete(request, id):
 	----------
 	a redirect to the gallery view
 	'''
-	to_delete_obj = Ingredients.objects.get(id=id)
-	to_delete_obj.delete()
-	return redirect('pantry_home')
+    to_delete_obj = UserPantry.objects.filter(id=id)
+    to_delete_obj.delete()
+    return redirect('pantry_home')
 
 
 def pantry_quantity_add(request, id):
