@@ -6,6 +6,8 @@ from django.contrib import messages, auth
 from .models import Account, UserAccount
 from .forms import LoginForm, SignupForm, EditAccountForm
 
+from recipe.utils.search.engine import SearchEngine
+
 def account_view(request):
     if request.user.id:
         account = Account.objects.get(id=request.user.id)
@@ -34,9 +36,11 @@ def login_view(request):
         weightGoalMet = user.weight == user.weight_goal
         weightBelowGoal = user.weight < user.weight_goal
         weightDifference = abs(user.weight_goal - user.weight)
+        calories_consumed = user.calorie_goal + SearchEngine.calculate_calorie_goal(user)
         context = {
             'account': account, 'user': user, 'weightGoalMet': weightGoalMet,
-            'weightBelowGoal': weightBelowGoal, 'weightDifference': weightDifference
+            'weightBelowGoal': weightBelowGoal, 'weightDifference': weightDifference,
+            'calories_consumed': calories_consumed
         }
         return render(request, 'home/home.html', context)
     else:
