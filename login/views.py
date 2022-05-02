@@ -36,7 +36,7 @@ def login_view(request):
         weightGoalMet = user.weight == user.weight_goal
         weightBelowGoal = user.weight < user.weight_goal
         weightDifference = abs(user.weight_goal - user.weight)
-        calories_consumed = user.calorie_goal + SearchEngine.calculate_calorie_goal(user)
+        calories_consumed = user.calorie_goal - SearchEngine.calculate_calorie_goal(user)
         context = {
             'account': account, 'user': user, 'weightGoalMet': weightGoalMet,
             'weightBelowGoal': weightBelowGoal, 'weightDifference': weightDifference,

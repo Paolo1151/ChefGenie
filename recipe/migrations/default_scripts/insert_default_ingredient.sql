@@ -71,7 +71,7 @@ VALUES
     ('parsley', 'cup', 22, 'herb'), -- 69
     ('pork loin', 'chop', 211, 'meat'), -- 70
     ('tomato', 'piece', 18, 'vegetables'), -- 71
-    ('shredded Fontina cheese', 'cup', 420), -- 72
+    ('shredded Fontina cheese', 'cup', 420, 'dairy'), -- 72
     ('basil leaf', 'piece', 22, 'herb'), -- 73
     ('crumbled feta cheese', 'cup', 396, 'dairy'), -- 74
     ('white vinegar', 'tablespoon', 3, 'condiment'), -- 75
