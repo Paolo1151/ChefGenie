@@ -118,10 +118,6 @@ button a{
     background-color: #b98760;
 }
 
-#searchprompt {
-    color: #fff;
-}
-
 #pantry_div
 {
     text-align: center;
@@ -183,12 +179,16 @@ h5.pantry_quantity
     margin: 0px 10px 0px 10px;
 }
 
-.search_interface{
+.search_interface, #searchprompt {
     margin: 20px auto;
     padding: 20px;
     border-radius: 5px;
     background-color: rgba(255,255,255,0.75);
     display: block;
+}
+
+#searchprompt {
+    width: max-content;
 }
 
 #add_filter_button, #remove_filter_button{
