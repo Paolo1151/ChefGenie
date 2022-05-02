@@ -253,7 +253,7 @@ def pantry_delete(request, id):
 
 
 def pantry_quantity_add(request, id):
-	'''
+    '''
 	Defines the Deletion of a specific pantry entity
 
 	Parameters
@@ -267,7 +267,7 @@ def pantry_quantity_add(request, id):
 	----------
 	a redirect to the gallery view
 	'''
-	to_update = Ingredients.objects.get(id=id)
-	to_update.amount += 1
-	to_update.save()
-	return redirect('pantry_home')
+    to_update = UserPantry.objects.get(id=id)
+    to_update.amount += 1
+    to_update.save()
+    return redirect('pantry_home')

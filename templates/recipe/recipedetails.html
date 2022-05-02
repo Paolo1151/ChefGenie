@@ -33,55 +33,6 @@
     </ol>
 </article>
 
-<<<<<<< Updated upstream
-{% block content %}
-    <nav>
-        <ul>
-            <li><a href="/account">account</a></li>
-            <li><a href="/analytics">analytics</a></li>
-            <li><a href="/pantry">pantry</a></li>
-            <li><a class="active" href="/recipe">recipes</a></li>
-            <li><a href="/">home</a></li>
-        </ul>
-    </nav>
-    <article>
-        <h1>{{ recipe.name }}</h1>
-        <h3>Tags: </h3>
-        <div class="tags">
-            {% for tag in recipe_tags %}
-                <div class="tag">{{ tag }}</div>
-            {% endfor %}
-        </div>
-        <h3>Ingredients: </h3>
-        <ul>
-            {% for ingredient in recipe_ingredients %}
-                <li>{{ ingredient.required_amount }} {{ ingredient.ingredient.unit }}s {{ ingredient.ingredient.name }}</li>
-            {% endfor %}
-        </ul>
-        <h3>Directions: </h3>
-        <ol>
-            {% for step in recipe_steps %}
-                <li>{{ step }}</li>
-            {% endfor %}
-        </ol>
-    </article>
-
-    <article>
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.extra_tags == 'meal' %}
-                    <div id="message_non_expire">
-                        {{ message }}
-                        {% if message.level == 30 %}
-                            {% for req_info in request.session.requirements %}
-                                <li>{{ req_info.name }} - {{ req_info.amount_missing }} {{ req_info.unit }}</li>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-=======
 <article>
     {% if messages %} {% for message in messages %} {% if message.extra_tags == 'meal' %}
     <div id="message_non_expire">
@@ -90,7 +41,6 @@
         {% endfor %} {% endif %}
     </div>
     {% endif %} {% endfor %} {% endif %}
->>>>>>> Stashed changes
 
     <form action="{% url 'make_recipe' recipe.id %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}

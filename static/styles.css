@@ -307,7 +307,7 @@ hr.solid {
     text-decoration: none;
 }
 
-.account_field {
+/* .account_field {
     width: 30%;
     padding: 12px 20px;
     margin: 0 auto;
@@ -317,7 +317,7 @@ hr.solid {
     font-family: varela;
     font-size: 1em;
     text-align: center;
-}
+} */
 
 .filter_options_enable {
     margin: 20px 0px 10px 0px;
