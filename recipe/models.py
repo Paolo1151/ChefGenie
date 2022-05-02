@@ -6,6 +6,7 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=100)
     unit = models.CharField(max_length=10)
     calories = models.FloatField()
+    category = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.name

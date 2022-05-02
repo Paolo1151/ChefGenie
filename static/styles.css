@@ -299,6 +299,13 @@ hr.solid {
     opacity: 0;
 }
 
+.dataframe {
+    height: 300px;
+    width: 500px;
+    border: 3px solid black;
+    position: relative;
+    left: .5%;   
+}
 *:before, *:after { content: ''; }
 
 hr {
