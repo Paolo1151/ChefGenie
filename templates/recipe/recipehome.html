@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+<nav>
+    <ul>
+        <li><a href="/account">account</a></li>
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a class="active" href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
 <center>
     <form action="/recipe/recommend" method="post" class="search_interface">
         {% csrf_token %}
@@ -11,7 +20,7 @@
         <button type="submit">Search</button><br>
 
         <!-- Filtering -->
-        <h2>Enable Filters</h2>
+        <label for="filter_options_enable" class="button filter_options_enable">Enable Filters</label>
         <input type="checkbox" name="filter_enabled" id="filter_options_enable" onclick="show_filter_options()">
 
         <div class="filter_options" style="display: none;">

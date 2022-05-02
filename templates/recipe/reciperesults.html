@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <nav>
+        <ul>
+            <li><a href="/account">account</a></li>
+            <li><a href="/analytics">analytics</a></li>
+            <li><a href="/pantry">pantry</a></li>
+            <li><a class="active" href="/recipe">recipes</a></li>
+            <li><a href="/">home</a></li>
+        </ul>
+    </nav>
     <center>
-        <button type="button" onclick="location.href = '/recipe';">Return to Search</button>
+        <button style="margin: 20px 0px;" type="button" onclick="location.href = '/recipe';">Return to Search</button>
         <h4 id="searchprompt">
             Search Results based on: <u>{{ request.session.prompt }}</u>
         </h4>
@@ -15,7 +24,7 @@
             </h4>
         </center>
     {% else %}
-
+        
         <center><h2 style="color: white;">Recommendations based on your Goal<h2></center>
         {% for recipe in request.session.result_goal %}
             <article>
@@ -23,18 +32,16 @@
                     <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
                 </header>
 
-                <table>
-                    <tr>
-                        {% for tag in recipe.tags %}
-                            <td>{{ tag }}</td>
-                        {% endfor %}
-                    </tr>
-                </table>
+                <div class="tags">
+                    {% for tag in recipe.tags %}
+                        <div class="tag">{{ tag }}</div>
+                    {% endfor %}
+                </div>
                 <!-- More Descriptors to be added in the future -->
             </article>
         {% endfor %}
         
-        <hr>
+        <hr class="recipes-hr">
 
         <center><h2 style="color: white;">Other Recipes<h2></center>
             {% for recipe in request.session.result_other %}
@@ -43,13 +50,11 @@
                         <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
                     </header>
     
-                    <table>
-                        <tr>
-                            {% for tag in recipe.tags %}
-                                <td>{{ tag }}</td>
-                            {% endfor %}
-                        </tr>
-                    </table>
+                    <div class="tags">
+                        {% for tag in recipe.tags %}
+                            <div class="tag">{{ tag }}</div>
+                        {% endfor %}
+                    </div>
                     <!-- More Descriptors to be added in the future -->
                 </article>
             {% endfor %}

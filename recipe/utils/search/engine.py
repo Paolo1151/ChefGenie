@@ -44,7 +44,8 @@ class SearchEngine(RecipeModel):
             other_recipes=SearchEngine.package_recipes(self.recipes)
         ) 
 
-    def calculate_calorie_goal(self, user):
+    @staticmethod
+    def calculate_calorie_goal(user):
         with psycopg2.connect(SearchEngine.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'calorie_intake_today.sql')) as query:

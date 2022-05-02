@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <nav>
+        <ul>
+            <li><a href="/account">account</a></li>
+            {% if user_index != 0 %}
+                <li><a class="active" href="/analytics">analytics</a></li>
+            {% else %}
+                <li><a href="/login">analytics</a></li>
+            {% endif %}
+            <li><a href="/pantry">pantry</a></li>
+            <li><a href="/recipe">recipes</a></li>
+            <li><a href="/">home</a></li>
+        </ul>
+    </nav>
     <article>
-        <h1 style="text-align:center;">Fitness Analytics</h1>
-        <div class="tags" style="align-content: center;">
-            <img src="data:image/png;base64,{{ graph }}" height="300" width ="500" style="border:5px solid black;vertical-align:middle; align-content: center;" /> 
-        </div>
-        <div class="historytable" style="align-content:center;">
+        <h1 style="text-align:center;">Fitness Analytics</h1> <br>
+        <div class="historygraph" style="align-content:center; margin-left: 30%;">
             <h3 class="h3"> Calorie Intake by Date </h3>
-            <br>
-            {{ final_df }}
+            <div class="tags">
+                <img src="data:image/png;base64,{{ graph }}" height="300" width ="500" style="border:5px solid black;vertical-align:middle; align-content: center;" /> 
+            </div>
+        </div>
+        <div class="" style="align-content:center; margin-left: 30%;" >
+            <h3 class="h3"> Calorie Intake History </h3> 
+            {{ table|safe }}
         </div>
     </article>
 
-{% endblock content %}
+{% endblock content %}  
