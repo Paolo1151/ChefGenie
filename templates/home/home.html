@@ -1,11 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if request.session.user_index != 0 %}
-        <center>
-            <h1>Welcome, {{  }}</h1>
-        </center>
-    {% else %}
-        
-    {% endif %}
+    <nav>
+        <ul>
+            <li><a href="/account">account</a></li>
+            <li><a href="/analytics">analytics</a></li>
+            <li><a href="/pantry">pantry</a></li>
+            <li><a href="/recipe">recipes</a></li>
+            <li><a class="active" href="/">home</a></li>
+        </ul>
+    </nav>
+    <center>
+        <h1 style="color:white;">Welcome, {{ account.username }}!</h1>
+    </center>
+    <div class="home">
+        <article class="calorie-goal">
+            <h3>Calorie Goal</h3>
+            <p>You have consumed a total of x over {{ user.calorie_goal }} calories for today.</p>
+        </article>
+        <article class="weight-goal">
+            <h3>Weight Goal</h3>
+            <p>You currently weigh <b>{{ user.weight }} kg</b>.</p>
+            {% if weightGoalMet %}
+                <p>Congratulations for achieving your weight goal!</p>
+            {% elif weightBelowGoal %}
+                <p>Keep on going! You need to gain <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
+            {% else %}
+                <p>Keep on going! You need to lose <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
+            {% endif %}
+        </article>
+        <article class="you-may-like">
+            <h3>You May Like</h3>
+            <p>Based on your meal history, you may like to try the following recipes.</p>
+        </article>
+    </div>
 {% endblock content %}

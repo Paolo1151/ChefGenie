@@ -2,20 +2,22 @@ from django.shortcuts import render
 from django.shortcuts import reverse
 from django.shortcuts import redirect
 
-from django.contrib import messages
+from django.conf import settings
 
-from chefgenie.settings import BASE_DIR
-from chefgenie.settings import SEARCH_ENGINE
-from chefgenie.settings import ANALYTICS_ENGINE
+from django.contrib import messages
 
 from .forms import SearchForm
 from .forms import ReviewForm
 from .forms import MealmadeForm
+from .forms import AddIngredientForm
 
 from .models import Recipe
 from .models import Requirement
 from .models import RecipeReview
 from .models import Mealmade
+from .models import Ingredient
+from .models import UserPantry
+
 from login.models import UserAccount
 
 from .utils import search
@@ -44,8 +46,8 @@ def analytics_home(request):
         Request is assumed to be a GET protocol 
     '''
     if request.user.id is not None:
-        context = ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7)
-        context['table'] = ANALYTICS_ENGINE.table_calorie_intake(request.user.id, 7)
+        context = settings.ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7)
+        context['table'] = settings.ANALYTICS_ENGINE.table_calorie_intake(request.user.id, 7)
         return render(request, 'recipe/analytics.html', context)
     else:
         return redirect('login')
@@ -77,7 +79,7 @@ def recipe_recommend(request):
     if form.is_valid():
             prompt = form.cleaned_data.get('search_term')  
             request.session['prompt'] = prompt
-            results = SEARCH_ENGINE.generate_search_results(prompt, search_config)
+            results = settings.SEARCH_ENGINE.generate_search_results(prompt, search_config)
             request.session['result_goal'] = results['goal_recipes']
             request.session['result_other'] = results['other_recipes']
 
@@ -114,24 +116,36 @@ def recipe_details(request, pk):
             'recipe_tags': recipe.tags.split(" "),
             'recipe_ingredients': Requirement.objects.select_related('recipe').select_related('ingredient').filter(recipe_id=recipe.id),
             'recipe_steps': recipe.steps.split(" | "),
-            'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__user__username', 'rating', 'comment')
+            'reviews': RecipeReview.objects.filter(recipe__id=pk).values('user__username', 'rating', 'comment')
         }
     )
 
 
 def make_recipe(request, pk):
     url = request.META.get('HTTP_REFERER')
+    request.session['is_insufficient'] = False
     recipe_id = pk
-    # Record the new recipe with the user id
     if request.method == 'POST':
         form = MealmadeForm(request.POST)
         if form.is_valid():
-            consume = Mealmade()
-            consume.recipe_id = recipe_id
-            consume.user_id = request.user.id
-            consume.amount = form.cleaned_data['amount']
-            consume.save()
-        messages.success(request, 'Thank you! This meal has been added to your history.')
+            missing, to_update = settings.VALIDATOR.validate(pk, form.cleaned_data['amount'])
+            if not missing:
+                consume = Mealmade()
+                consume.recipe_id = recipe_id
+                consume.user_id = request.user.id
+                consume.amount = form.cleaned_data['amount']
+                consume.save()
+
+                for rid, consumed in to_update:
+                    ingredient = UserPantry.objects.get(ingredient__id=rid, user__id=request.user.id)
+                    ingredient.amount -= consumed
+                    ingredient.save()
+
+                messages.success(request, 'Thank you! This meal has been added to your history.', extra_tags='meal')
+            else:
+                request.session['requirements'] = missing
+                request.session['is_insufficient'] = True
+                messages.warning(request, 'Insufficient Ingredients for Recipe!', extra_tags='meal')
     return redirect(url)
 
 
@@ -157,7 +171,7 @@ def submit_review(request, recipe_id):
             form = ReviewForm(request.POST, instance=review)
             form.save()
             
-            messages.success(request, 'Thank you! Your review has been updated.')
+            messages.success(request, 'Thank you! Your review has been updated.', extra_tags='review')
         except RecipeReview.DoesNotExist:
             form = ReviewForm(request.POST)
             if form.is_valid():
@@ -168,6 +182,92 @@ def submit_review(request, recipe_id):
                 data.user_id = request.user.id
                 data.save()
 
-                messages.success(request, 'Thank you! Your review has been posted.')
+                messages.success(request, 'Thank you! Your review has been posted.', extra_tags='review')
     
     return redirect(url)
+
+
+def pantry_gallery_view(request):
+    '''
+    Defines the view of the pantry page.
+
+    Parameters
+    -----------
+    request: a request object from django
+
+    Returns
+    -----------
+    rendered: A Rendered Page Object based on the html
+    ''' 
+    if request.user.id is not None:
+        return render(request, 'pantry/pantry.html', {
+            'pantry': UserPantry.objects.all().filter(user__id=request.user.id).order_by('id'),
+            'add_form': AddIngredientForm()
+        })
+    else:
+        return redirect('login')
+
+
+def pantry_add(request):	
+    '''
+	Defines the Addition of a new Ingredient
+
+	Parameters
+	----------
+	request: Django.request 
+		a request object from django
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+    form = AddIngredientForm(request.POST)
+    if form.is_valid():
+        new_ingr = UserPantry(
+            ingredient=form.cleaned_data['ingredient'],
+            user=request.user,
+            amount=form.cleaned_data['amount']
+        )
+        new_ingr.save()
+    return redirect('pantry_home')
+
+
+def pantry_delete(request, id):
+    '''
+	Defines the Deletion of a specific pantry entity
+
+	Parameters
+	----------
+	request: Django.request 
+		a request object from django
+	id : int
+		the id of the object concerned
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+    to_delete_obj = UserPantry.objects.filter(id=id)
+    to_delete_obj.delete()
+    return redirect('pantry_home')
+
+
+def pantry_quantity_add(request, id):
+	'''
+	Defines the Deletion of a specific pantry entity
+
+	Parameters
+	----------
+	request: Django.request 
+		a request object from django
+	id : int
+		the id of the object concerned
+
+	Returns
+	----------
+	a redirect to the gallery view
+	'''
+	to_update = Ingredients.objects.get(id=id)
+	to_update.amount += 1
+	to_update.save()
+	return redirect('pantry_home')

@@ -37,6 +37,21 @@
     </article>
 
     <article>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.extra_tags == 'meal' %}
+                    <div id="message_non_expire">
+                        {{ message }}
+                        {% if message.level == 30 %}
+                            {% for req_info in request.session.requirements %}
+                                <li>{{ req_info.name }} - {{ req_info.amount_missing }} {{ req_info.unit }}</li>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <form action="{% url 'make_recipe' recipe.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="make-form">
@@ -83,9 +98,12 @@
                 {% endif %}
             </div>
         </form>
+
         {% if messages %}
-            {% for message in messages %}
-                <div id="message">{{ message }}</div>
+            {% for message in messages %}  
+                {% if message.extra_tags == 'review' %}
+                    <div id="message">{{ message }}</div>
+                {% endif %}
             {% endfor %}
         {% endif %}
 

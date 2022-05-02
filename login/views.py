@@ -7,7 +7,7 @@ from .models import Account, UserAccount
 from .forms import LoginForm, SignupForm, EditAccountForm
 
 def account_view(request):
-    if request.user.id is not None:
+    if request.user.id:
         account = Account.objects.get(id=request.user.id)
         user = UserAccount.objects.get(user_id=request.user.id)
         context = {'account': account, 'user': user}
@@ -28,6 +28,17 @@ def login_view(request):
             return redirect('account')
         else:
             message = 'invalid username or password'
+    elif request.user.id:
+        account = Account.objects.get(id=request.user.id)
+        user = UserAccount.objects.get(user_id=request.user.id)
+        weightGoalMet = user.weight == user.weight_goal
+        weightBelowGoal = user.weight < user.weight_goal
+        weightDifference = abs(user.weight_goal - user.weight)
+        context = {
+            'account': account, 'user': user, 'weightGoalMet': weightGoalMet,
+            'weightBelowGoal': weightBelowGoal, 'weightDifference': weightDifference
+        }
+        return render(request, 'home/home.html', context)
     else:
         message = ''
     form = LoginForm()
@@ -35,10 +46,12 @@ def login_view(request):
     context= {'message': message, 'form': form}
     return render(request, 'login/login.html', context)
 
+
 def logout_view(request):
     if request.method == 'POST':
         auth.logout(request)
         return redirect('login')
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -65,6 +78,7 @@ def signup_view(request):
 
     context = {'message': message, 'form': form}
     return render(request, 'login/signup.html', context)
+
 
 def edit_account_view(request):
     if request.user.id is not None:
