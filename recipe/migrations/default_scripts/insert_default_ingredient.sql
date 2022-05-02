@@ -1,4 +1,4 @@
-INSERT INTO recipe_ingredient(name, unit, calories)
+INSERT INTO recipe_ingredient(name, unit, calories, category)
 VALUES
     ('tomato sauce', 'can', 102, 'condiment'), -- 1
     ('grated Parmesan cheese', 'cup', 431, 'dairy'), -- 2
