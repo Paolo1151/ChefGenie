@@ -2,9 +2,12 @@ from ctypes.wintypes import HRSRC
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib import messages, auth
+from django.contrib.auth import update_session_auth_hash
 
 from .models import Account, UserAccount
 from .forms import LoginForm, SignupForm, EditAccountForm, EditUsername, EditPassword
+
+message = ''
 
 def account_view(request):
     if request.user.id is not None:
@@ -81,7 +84,7 @@ def edit_account_view(request):
         user = UserAccount.objects.get(user_id=request.user.id)
         if request.method == 'POST':
             form = EditUsername(request.POST, instance=user)
-            password_form = EditPassword(request.POST, instance=user)
+            password_form = EditPassword(request.POST, instance=account)
             if form.is_valid():
                 account.username = form.cleaned_data['username']
                 account.save()
@@ -90,28 +93,28 @@ def edit_account_view(request):
                 return redirect('edit_account')
         else:
             form = EditUsername(request.GET, instance=user)
-            password_form = EditPassword(request.GET, instance=user)
+            password_form = EditPassword(request.GET, instance=account)
             form.fields['username'].widget.attrs = {'value': account.username, 'class': 'account_field'}
             password_form.fields['password'].widget.attrs = {'placeholder': 'password', 'class': 'account_field'}
             password_form.fields['confirm_password'].widget.attrs = {'placeholder': 'confirm password', 'class': 'account_field'}
-            context = {'user': user, 'form': form, 'account': account, 'password_form': password_form}
+            context = {'user': user, 'form': form, 'account': account, 'password_form': password_form, 'message': message}
             return render(request, 'login/edit_account.html', context)
     else:
         return redirect('login')
 
 def edit_password_view(request):
-    print('edit password')
     account = Account.objects.get(id=request.user.id)
-    user = UserAccount.objects.get(user_id=request.user.id)
-    form = EditPassword(request.POST, instance=user)
-    if form.cleaned_data['password'] != form.cleaned_data['confirm_password']:
-        message = 'Passwords do not match'
-        return redirect('account')
-    elif form.is_valid():
-        password = form.cleaned_data['password']
-        account.set_password(password)
-        account.save()
-        return redirect('account')
-    else:
-        message = 'Username or Email already taken!'
+    password_form = EditPassword(request.POST, instance=account)
+    if password_form.is_valid():
+        if (password_form.cleaned_data['password'] != password_form.cleaned_data['confirm_password']):
+            message = 'Passwords do not match'
+            return redirect('')
+        elif password_form.is_valid():
+            password = password_form.cleaned_data['password']
+            account.set_password(password)
+            account.save()
+            update_session_auth_hash(request, account)
+            return redirect('edit_account')
+        else:
+            message = 'Username or Email already taken!'
     return redirect('edit_account')

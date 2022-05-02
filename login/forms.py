@@ -76,8 +76,8 @@ class EditPassword(forms.ModelForm):
         model = Account
         fields = ['password']
 
-    def clean(self):
-        cleaned_data = super(EditPassword, self).clean()
+    # def clean(self):
+    #     cleaned_data = super(EditPassword, self).clean()
 
     def __init__(self, *args, **kwargs):
         super(EditPassword, self).__init__(*args, **kwargs)
