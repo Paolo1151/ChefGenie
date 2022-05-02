@@ -31,7 +31,7 @@
         <div id = "pantry_div">
             {% for a in pantry %}
                 <section id = "pantry_item">
-                    <h2 class = "pantry_name">{{a.name}}</h2>
+                    <h2 class = "pantry_name">{{ a.ingredient.name }}</h2>
                     <h5 class = "pantry_quantity">Quantity:   <span style = "font-size:large;">{{a.amount}}</span></h5>
                     <section style = "display:inline-block;">
                         <button class = "pantry_item_edit" type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
