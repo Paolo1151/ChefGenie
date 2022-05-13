@@ -1,8 +1,9 @@
 from recipe.utils.base.model import BaseObject
 from recipe.utils.base.model import BaseModel
 
+
 class Recipe(BaseObject):
-    def __init__(self, id, name, tags, calories, *args, **kwargs):
+    def __init__(self, id, name, tags, calories=0, *args, **kwargs):
         '''
         Parameters
         ----------
@@ -63,6 +64,13 @@ class RecipeModel(BaseModel):
     def flush_pool(self):
         self.recipes = []
 
+    def fill_pool(self):
+        with psycopg2.connect(RecipeModel.get_connection_string()) as conn:
+            with conn.cursor() as curs:
+                curs.execute('SELECT * FROM recipe_recipe')
+
+                for row in curs:
+                    self.add_new_recipe(row[-1])
     @staticmethod
     def package_recipes(recipe_list):
         serialized_recipes = []

@@ -16,6 +16,10 @@ class RecommendationEngine(RecipeModel):
             spacy.cli.download('en_core_web_md')
             self.nlp = spacy.load('en_core_web_md')
 
+        self.new_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'recom_script_new.sql')
+        self.cat_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'recom_script_cat.sql')
+        self.rev_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'recom_script_rev.sql')
+
     def process(self, text):
         '''
         Parameters
@@ -71,7 +75,31 @@ class RecommendationEngine(RecipeModel):
 
         return doc1.similarity(doc2)
 
-    def generate_recommendations(self, n):
+    def compare_top3(self, top3tags, comptags):
+        '''
+        Attributes:
+        -----------
+        top3tags : list
+            List of recipe tags from the top 3 recipes of the user
+
+        comptags : str
+            Recipe tags to compare with top 5
+
+        Returns:
+        -----------
+        similarity : float
+            The document similarity score of the two texts 
+        '''
+        avg_sim = 0
+
+        for best in top3:
+            avg_sim += compare(best, comptags)
+        
+        avg_sim /= 3
+
+        return avg_sim
+
+    def generate_recommendations(self, recommendation_type, user_id):
         '''
         Generate Top n Recommendations based on Tag Similarity of foods that person ate, clicked, or reviewed
 
@@ -85,6 +113,49 @@ class RecommendationEngine(RecipeModel):
             recipes : list
                 A List of N Recipies from most recommended to least recommended
         '''
-        pass
+        recommendations = []
+
+        if recommendation_type == 'new':
+            with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
+                with conn.cursor() as curs:
+                    with open(self.new_path) as q:
+                        template = q.read()
+                        template = template.replace('[USERID]', str(user_id))
+
+                        curs.execute(template)
+
+                        for row in curs:
+                            recommendations.append((row[0], row[1]))
+
+        elif recommendation_type == 'category':
+            with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
+                with conn.cursor() as curs:
+                    with open(self.cat_path) as q:
+                        template = q.read()
+                        template = template.replace('[USERID]', str(user_id))
+
+                        curs.execute(template)
+
+                        for row in curs:
+                            recommendations.append((row[0], row[1]))
+
+        elif recommendation_type == 'review':
+            self.fill_pool()
+            with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
+                with conn.cursor() as curs:
+                    with open(self.rev_path) as q:
+                        template = q.read()
+                        template = template.replace('[USERID]', str(user_id))
+
+                        curs.execute(template)
+
+                        top3 = []
+                        for row in curs:
+                            top3.append(row[0])
+
+                        for recipe in self.recipes:
+                            recipe.set_similarity(compare_top3(top3, recipe.get_tags()))
+
+        return recommendations
 
 

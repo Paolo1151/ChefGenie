@@ -64,13 +64,13 @@ VALUES
     ('heavy cream', 'cup', 821, 'dairy'), -- 62
     ('whole milk yogurt', 'tablespoon', 22, 'dairy'), -- 63
     ('Chinese sausage', 'piece', 240, 'meat'), -- 64
-    ('frozen sweet peas', 'cup', 117, 'vegetables'), -- 65
+    ('frozen sweet peas', 'cup', 117, 'vegetable'), -- 65
     ('green onion', 'cup', 32, 'herb'), -- 66
     ('lumpia wrapper', 'piece', 20, 'carbohydrates'), -- 67
-    ('carrot', 'piece', 41, 'vegetables'), -- 68
+    ('carrot', 'piece', 41, 'vegetable'), -- 68
     ('parsley', 'cup', 22, 'herb'), -- 69
     ('pork loin', 'chop', 211, 'meat'), -- 70
-    ('tomato', 'piece', 18, 'vegetables'), -- 71
+    ('tomato', 'piece', 18, 'vegetable'), -- 71
     ('shredded Fontina cheese', 'cup', 420, 'dairy'), -- 72
     ('basil leaf', 'piece', 22, 'herb'), -- 73
     ('crumbled feta cheese', 'cup', 396, 'dairy'), -- 74
@@ -78,14 +78,14 @@ VALUES
     ('whole peppercorn', 'teaspoon', 0, 'herb'), -- 76
     ('sesame oil', 'tablespoon', 120, 'miscellaneous'), -- 77
     ('wonton wrapper', 'piece', 23.3, 'carbohydrates'), -- 78
-    ('instant coffee', 'tablespoon', 9, 'miscellaneous'), -- 79
+    ('instant coffee', 'tablespoon', 9, 'miscellaneous'), --79
     ('cold water', 'tablespoon', 0, 'miscellaneous'), -- 80
     ('brown sugar', 'tablespoon', 42, 'condiment'), -- 81
     ('baking soda', 'teaspoon', 2, 'miscellaneous'), -- 82
     ('chocolate chunk', 'ounce', 138, 'sweets'), -- 83
     ('pork floss', 'cup', 175, 'meat'), -- 84
     ('water', 'cup', 0, 'miscellaneous'), -- 85
-    ('cabbage', 'cup', 17, 'vegetables'), -- 86
+    ('cabbage', 'cup', 17, 'vegetable'), -- 86
     ('Magic Sarap', 'sachet', 12, 'condiment'), -- 87
     ('pandan gulaman powder', 'teaspoon', 15, 'miscellaneous'), -- 88
     ('shredded coconut', 'cup', 283, 'fruit'), -- 89
@@ -93,10 +93,10 @@ VALUES
     ('condensed milk', 'cup', 982, 'dairy'), -- 91
     ('tapioca pearls', 'cup', 544, 'sweets'), -- 92
     ('gelatin powder', 'sachet', 23, 'sweets'), -- 93
-    ('brown sugar', 'cup', 551, 'codniment'), -- 94
+    ('brown sugar', 'cup', 551, 'condiment'), -- 94
     ('squash', 'piece', 63, 'vegetable'), -- 95
     ('toasted walnut', 'piece', 26, 'nuts'), -- 96
-    ('ginger', 'piece', 80, 'herbs'), -- 97
+    ('ginger', 'piece', 80, 'herb'), -- 97
     ('pork belly', 'kilogram', 5180, 'meat'), -- 98
     ('bagoong alamang', 'tablespoon', 35, 'condiment'), -- 99
     ('coconut milk', 'cup', 552, 'dairy'), -- 100
