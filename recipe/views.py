@@ -244,7 +244,6 @@ def pantry_add(request):
         new_ingr = UserPantry(
             ingredient=form.cleaned_data['ingredient'],
             user=request.user,
-            amount=form.cleaned_data['amount']
         )
         new_ingr.save()
     return redirect('pantry_home')
@@ -270,22 +269,22 @@ def pantry_delete(request, id):
     return redirect('pantry_home')
 
 
-def pantry_quantity_add(request, id):
-    '''
-	Defines the Deletion of a specific pantry entity
+# def pantry_quantity_add(request, id):
+#     '''
+# 	Defines the Deletion of a specific pantry entity
 
-	Parameters
-	----------
-	request: Django.request 
-		a request object from django
-	id : int
-		the id of the object concerned
+# 	Parameters
+# 	----------
+# 	request: Django.request 
+# 		a request object from django
+# 	id : int
+# 		the id of the object concerned
 
-	Returns
-	----------
-	a redirect to the gallery view
-	'''
-    to_update = UserPantry.objects.get(id=id)
-    to_update.amount += 1
-    to_update.save()
-    return redirect('pantry_home')
+# 	Returns
+# 	----------
+# 	a redirect to the gallery view
+# 	'''
+#     to_update = UserPantry.objects.get(id=id)
+#     to_update.amount += 1
+#     to_update.save()
+#     return redirect('pantry_home')
