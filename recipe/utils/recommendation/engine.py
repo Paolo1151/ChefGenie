@@ -5,6 +5,7 @@ import os
 import spacy
 import pandas as np
 import psycopg2
+import random
 
 class RecommendationEngine(RecipeModel):
     def __init__(self):
@@ -92,14 +93,14 @@ class RecommendationEngine(RecipeModel):
         '''
         avg_sim = 0
 
-        for best in top3:
-            avg_sim += compare(best, comptags)
+        for best in top3tags:
+            avg_sim += self.compare(best, comptags)
         
         avg_sim /= 3
 
         return avg_sim
 
-    def generate_recommendations(self, recommendation_type, user_id):
+    def generate_recommendations(self, n, recommendation_type, user_id):
         '''
         Generate Top n Recommendations based on Tag Similarity of foods that person ate, clicked, or reviewed
 
@@ -127,6 +128,9 @@ class RecommendationEngine(RecipeModel):
                         for row in curs:
                             recommendations.append((row[0], row[1]))
 
+                        if len(recommendations) > n:
+                            recommendations = random.sample(recommendations, k=n)
+
         elif recommendation_type == 'category':
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
                 with conn.cursor() as curs:
@@ -139,6 +143,8 @@ class RecommendationEngine(RecipeModel):
                         for row in curs:
                             recommendations.append((row[0], row[1]))
 
+                        recommendations = random.sample(recommendations, k=n)
+
         elif recommendation_type == 'review':
             self.fill_pool()
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
@@ -150,11 +156,20 @@ class RecommendationEngine(RecipeModel):
                         curs.execute(template)
 
                         top3 = []
+                        top3_id = []
                         for row in curs:
-                            top3.append(row[0])
+                            top3_id.append(row[0])
+                            top3.append(row[1])
 
                         for recipe in self.recipes:
-                            recipe.set_similarity(compare_top3(top3, recipe.get_tags()))
+                            if recipe.id in top3_id:
+                                recipe.set_similarity(0)
+                            else:
+                                recipe.set_similarity(self.compare_top3(top3, recipe.get_tags()))
+
+                        recommendations_recp = sorted(self.recipes, key=lambda x: x.get_similarity(), reverse=True)[:n]
+
+                        recommendations = [(recipe.id, recipe.get_name()) for recipe in recommendations_recp]
 
         return recommendations
 

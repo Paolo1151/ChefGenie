@@ -1,9 +1,11 @@
 select
-	tags
+	q.id,
+	q.tags
 from
 (
 	select
-		*,
+		rr2.id,
+		rr2.tags,
 		RANK() over (order by rr.rating desc, rr.created_at)
 	from
 		recipe_recipereview rr

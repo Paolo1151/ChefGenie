@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from .forms import SearchForm
 from .forms import ReviewForm
@@ -23,6 +24,23 @@ from login.models import UserAccount
 from .utils import search
 from .utils.search.config import SearchConfig
 from .utils import analytics
+
+
+def home(request, recom_type):
+    recomms = settings.RECOM_ENGINE.generate_recommendations(5, recom_type, request.user.id)
+
+    user = UserAccount.objects.get(user_id=request.user.id)
+    context = {
+        'account': get_user_model().objects.get(id=request.user.id),
+        'user': user,
+        'weightGoalMet': user.weight == user.weight_goal,
+        'weightBelowGoal': user.weight < user.weight_goal,
+        'weightDifference': abs(user.weight_goal - user.weight),
+        'calories_consumed': user.calorie_goal - settings.SEARCH_ENGINE.calculate_calorie_goal(user),
+        'recommendations': recomms,
+        'recom_type': recom_type
+    }
+    return render(request, 'home/home.html', context)
 
 
 def recipe_home(request):

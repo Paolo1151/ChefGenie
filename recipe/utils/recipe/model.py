@@ -1,6 +1,7 @@
 from recipe.utils.base.model import BaseObject
 from recipe.utils.base.model import BaseModel
 
+import psycopg2
 
 class Recipe(BaseObject):
     def __init__(self, id, name, tags, calories=0, *args, **kwargs):
@@ -50,7 +51,7 @@ class Recipe(BaseObject):
         del self.tags[value]
 
     def __str__(self):
-        return f"{name}: {tags}"
+        return f"{self.name}: {self.tags} : {self.similarity}"
 
 
 class RecipeModel(BaseModel):
@@ -65,12 +66,13 @@ class RecipeModel(BaseModel):
         self.recipes = []
 
     def fill_pool(self):
+        self.flush_pool()
         with psycopg2.connect(RecipeModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 curs.execute('SELECT * FROM recipe_recipe')
 
                 for row in curs:
-                    self.add_new_recipe(row[-1])
+                    self.add_new_recipe(row[:-1])
     @staticmethod
     def package_recipes(recipe_list):
         serialized_recipes = []
