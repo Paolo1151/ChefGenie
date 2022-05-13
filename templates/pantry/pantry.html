@@ -22,20 +22,18 @@
         <form action='pantry/add' method='POST' enctype="multipart/form-data">
             {% csrf_token %}
             <div>Name: {{ add_form.ingredient }}</div>
-            <div>Amount: {{ add_form.amount }}</div>
+            <!-- <div>Amount: {{ add_form.amount }}</div> -->
             <input class="button" type="submit" value="Submit">
         </form>
     </div>
 
     <div id="pantry_div">
         {% for a in pantry %}
-        <section id="pantry_item">
+        <section style='height: 100px;' id="pantry_item">
             <h2 class="pantry_name">{{ a.ingredient.name }}</h2>
-            <h5 class="pantry_quantity">Quantity: <span style="font-size:large;">{{a.amount}}</span></h5>
-            <section style="display:inline-block;">
-                <button class="pantry_item_edit" type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
-                <button class="pantry_item_edit" type="submit" onclick="location.href = '/pantry/qadd/{{a.id}}'">Add 1</button>
-            </section>
+            <br>
+            <!-- <h5 class="pantry_quantity">Quantity: <span style="font-size:large;">{{a.amount}}</span></h5> -->
+            <button style="font-size:0.8rem;float:right;padding:10px; width: fit-content;" class="pantry_item_edit" type="submit" onclick="location.href = '/pantry/delete/{{a.id}}'">Delete Item</button>
         </section>
         {% endfor %}
     </div>
