@@ -109,7 +109,10 @@
             </div>
             {% if user.profile_picture %}
             <div>
-                <img src="{{ user.profile_picture.url }}" alt="" style=""> {% endif %}
+                <img src="{{ user.profile_picture.url }}" alt="" style=""> 
+                {% else %}
+                <img src="/media/profile_pictures/default.jpg" alt="" style=""> 
+                {% endif %}
             </div>
         </div>
     </header>
