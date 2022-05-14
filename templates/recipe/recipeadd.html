@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+<nav>
+    <ul>
+        <a href="/"><img src="static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
+        <li><a href="/account">account</a></li>
+        <li><a href="/analytics">analytics</a></li>
+        <li><a href="/pantry">pantry</a></li>
+        <li><a class="active" href="/recipe">recipes</a></li>
+        <li><a href="/">home</a></li>
+    </ul>
+</nav>
+<center>
+    <form class="form" method="post">
+        {% csrf_token %} {% if message != '' %}
+        <h2>{{ message }}</h2>
+        {% endif %}
+
+        <h1>signup</h1>
+        {{ form.name }} <br> <br> {{ form.tags }} <br> <br> {{ form.ingredients }} <br> <br> {{ form.steps }} <br> <br>
+
+        <button type="submit">submit</button>
+    </form>
+</center>
+{% endblock content %}

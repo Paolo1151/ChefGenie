@@ -4,6 +4,7 @@ from .models import RecipeReview
 from .models import Mealmade
 from .models import UserPantry
 from .models import Ingredient
+from .models import Recipe
 
 class SearchForm(forms.Form):
     search_term = forms.CharField(label='Search Term')
@@ -25,3 +26,8 @@ class AddIngredientForm(forms.ModelForm):
     class Meta:
         model = UserPantry
         fields = ['ingredient', 'amount']
+
+class AddRecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['name', 'tags', 'ingredients', 'steps']

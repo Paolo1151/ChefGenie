@@ -10,6 +10,7 @@ from .forms import SearchForm
 from .forms import ReviewForm
 from .forms import MealmadeForm
 from .forms import AddIngredientForm
+from .forms import AddRecipeForm
 
 from .models import Recipe
 from .models import Requirement
@@ -271,3 +272,24 @@ def pantry_quantity_add(request, id):
     to_update.amount += 1
     to_update.save()
     return redirect('pantry_home')
+
+def recipe_add(request):
+    if request.method == 'POST':
+        form = AddRecipeForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            tags = form.cleaned_data['tags']
+            ingredients = form.cleaned_data['ingredients']
+            steps = form.cleaned_data['steps']
+            recipe = Recipe.objects.create(name=name, tags=tags, steps=steps)
+            # recipe.ingredients.set(ingredients)
+            recipe.save()
+            return redirect('/recipe')
+        else:
+                message = 'Details incomplete'
+    else:
+        message = ''
+        form = AddRecipeForm()
+
+    context = {'message': message, 'form': form}
+    return render(request, 'recipe/recipeadd.html', context)
