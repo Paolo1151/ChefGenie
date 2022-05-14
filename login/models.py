@@ -66,7 +66,7 @@ class UserAccount(models.Model):
     height = models.DecimalField(verbose_name="height", max_digits=5, decimal_places=2, default=160.00)
     weight_goal = models.DecimalField(max_digits=5, decimal_places=2, default=60.00)
     calorie_goal = models.IntegerField(default=2500)
-    profile_picture = models.ImageField(null="/media/profile_pictures/default.jpg ", blank=True, upload_to="profile_pictures/")
+    profile_picture = models.ImageField(null=True, blank=True, upload_to="profile_pictures/", default="profile_pictures/default.jpg")
 
     @property
     def bmi(self):
