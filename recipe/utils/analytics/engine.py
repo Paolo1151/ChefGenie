@@ -1,3 +1,4 @@
+from heapq import merge
 from turtle import ycor
 from decouple import config
 from io import BytesIO
@@ -85,17 +86,24 @@ class AnalyticsEngine(BaseModel):
                     intake_query = intake_query.replace('[USERID]', str(user_id))
                     curs.execute(intake_query)
 
-                    ingredient_history = {'category': [], 'count': [], }
+                    ingredient_history = {'category': [], 'count': [], 'date': []}
                     for entry in curs:
                         if entry[0] == 'condiment' or entry[0] == 'spices' or entry[0] == 'miscellaneous' or entry[0] == 'herb':
                             continue
                         else: 
                             ingredient_history['category'].append(entry[0])
                             ingredient_history['count'].append(entry[1])
+                            ingredient_history['date'].append(entry[2])
 
                     df = pd.DataFrame(ingredient_history)
+                    df['date'] = pd.to_datetime(df['date'])
+
+                    date_df = AnalyticsEngine.generate_last_n_days(days_offset)
                     
-        return AnalyticsEngine._generate_chart(df)
+                    merged_df = date_df.merge(df, left_on='date', right_on='date', how='left')
+                    merged_df = merged_df.fillna(0).sort_values(by='date', ascending=True)
+                    
+        return AnalyticsEngine._generate_chart(merged_df.groupby(['date', 'category']))
 
 
     @staticmethod
