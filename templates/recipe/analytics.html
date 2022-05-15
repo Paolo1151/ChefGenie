@@ -26,6 +26,12 @@
         <h3 class="h3"> Calorie Intake History </h3>
         {{ table|safe }}
     </div>
+    <div class="" style="align-content:center; margin-left: 30%;">
+        <h3 class="h3"> Ingredients Consumed </h3>
+        <div class="tags">
+            <img src="data:image/png;base64,{{ chart }}" height="300" width="500" style="border:5px solid black;vertical-align:middle; align-content: center;" />
+        </div>
+    </div>
 </article>
 
 {% endblock content %}

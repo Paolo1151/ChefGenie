@@ -2,6 +2,8 @@ from decouple import config
 from io import BytesIO
 from recipe.utils.base.model import BaseModel
 
+#from login.models import UserAccount
+
 import pandas as pd
 import matplotlib
 matplotlib.use('agg')
@@ -75,6 +77,24 @@ class AnalyticsEngine(BaseModel):
         return AnalyticsEngine._generate_table(merged_df) 
 
     @staticmethod
+    def pie_chart_ingredients(user_id, days_offset):
+        with psycopg2.connect(BaseModel.get_connection_string()) as conn:
+            with conn.cursor() as curs:
+                with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'ingredients_chart.sql')) as query:
+                    intake_query = query.read()
+                    intake_query = intake_query.replace('[USERID]', str(user_id))
+                    curs.execute(intake_query)
+
+                    ingredient_history = {'category': [], 'count': [], }
+                    for entry in curs:
+                        ingredient_history['category'].append(entry[0])
+                        ingredient_history['count'].append(entry[1])
+
+                    df = pd.DataFrame(ingredient_history)
+                    print(df)
+                    
+        return AnalyticsEngine._generate_chart(df)
+    @staticmethod
     def _generate_graph(df):
         fig = plt.figure()
 
@@ -93,6 +113,22 @@ class AnalyticsEngine(BaseModel):
         plt.close(fig)
 
         return {'graph': b64}
+
+    @staticmethod
+    def _generate_chart(df):
+        fig = plt.figure()
+        plt.pie(df['count'],labels=df['category'], autopct='%1.1f%%')
+        plt.legend(title="Sources of Calories")
+        plt.axis('equal')
+        plt.tight_layout()
+
+        flike = BytesIO()
+        fig.savefig(flike)
+        b64 = base64.b64encode(flike.getvalue()).decode()
+
+        plt.close(fig)
+
+        return {'chart': b64}
 
     @staticmethod
     def _generate_table(df):
