@@ -30,8 +30,6 @@ from .utils import search
 from .utils.search.config import SearchConfig
 from .utils import analytics
 
-<<<<<<< HEAD
-=======
 
 def home(request, recom_type):
     recomms = settings.RECOM_ENGINE.generate_recommendations(5, recom_type, request.user.id)
@@ -50,7 +48,6 @@ def home(request, recom_type):
     return render(request, 'home/home.html', context)
 
 
->>>>>>> 499200f532671b5779fa824d32b2b741be51e9a7
 def recipe_home(request):
     '''
     Render the Home page of the Recipes HTML
@@ -319,7 +316,6 @@ def recipe_add2(request):
     else:
         return redirect('/recipe/add')
 
-<<<<<<< HEAD
 def recipe_add3(request):
     if request.session['recipe_id'] is not None:
         if request.method == 'POST':
@@ -338,7 +334,5 @@ def recipe_add3(request):
         return render(request, 'recipe/recipeadd.html', context)
     else:
         return redirect('/recipe/add')
-=======
     context = {'message': message, 'form': form}
     return render(request, 'recipe/recipeadd.html', context)
->>>>>>> 499200f532671b5779fa824d32b2b741be51e9a7
