@@ -30,6 +30,7 @@ def account_view(request):
     else:
         return redirect('login')
 
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -125,6 +126,7 @@ def edit_account_view(request):
             return render(request, 'login/edit_account.html', context)
     else:
         return redirect('login')
+
 
 def edit_password_view(request):
     account = Account.objects.get(id=request.user.id)

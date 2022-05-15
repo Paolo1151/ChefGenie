@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('home/<str:recom_type>', views.home, name='home'),
+
     path('recipe', views.recipe_home, name='recipe_home'),
     path('recipe/recommend', views.recipe_recommend, name='recipe_recommend'),
     path('recipe/search_results', views.recipe_results, name='recipe_results'),
@@ -17,5 +19,4 @@ urlpatterns = [
     path('pantry', views.pantry_gallery_view, name='pantry_home'),
     path('pantry/add', views.pantry_add, name='pantry_add'),
     path('pantry/delete/<int:id>', views.pantry_delete, name='pantry_delete'),
-    path('pantry/qadd/<int:id>', views.pantry_quantity_add, name='pantry_qadd'),
 ]

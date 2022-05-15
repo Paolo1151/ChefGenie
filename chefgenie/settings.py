@@ -19,6 +19,7 @@ import django_heroku
 from recipe.utils.search.engine import SearchEngine
 from recipe.utils.analytics.engine import AnalyticsEngine
 from recipe.utils.pantry.validator import RequirementValidator
+from recipe.utils.recommendation.engine import RecommendationEngine
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -158,6 +159,9 @@ ANALYTICS_ENGINE = AnalyticsEngine()
 
 # Pantry Validator
 VALIDATOR = RequirementValidator()
+
+# Recommendation Engine
+RECOM_ENGINE = RecommendationEngine()
 
 # Heroku Settings
 django_heroku.settings(locals())
