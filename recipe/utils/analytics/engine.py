@@ -1,13 +1,13 @@
+from turtle import ycor
 from decouple import config
 from io import BytesIO
 from recipe.utils.base.model import BaseModel
-
-#from login.models import UserAccount
 
 import pandas as pd
 import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
+import datetime as dt
 
 import psycopg2
 import os
@@ -29,7 +29,7 @@ class AnalyticsEngine(BaseModel):
         return pd.DataFrame(date_df, columns=['date'])
 
     @staticmethod
-    def graph_calorie_intake(user_id, days_offset):
+    def graph_calorie_intake(user_id, days_offset, goal):
         with psycopg2.connect(BaseModel.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'calorie_intake_all.sql')) as query:
@@ -50,7 +50,7 @@ class AnalyticsEngine(BaseModel):
                     merged_df = date_df.merge(df, left_on='date', right_on='date', how='left')
                     merged_df = merged_df.fillna(0).sort_values(by='date', ascending=False)
                     
-        return AnalyticsEngine._generate_graph(merged_df)
+        return AnalyticsEngine._generate_graph(merged_df, goal)
 
     @staticmethod
     def table_calorie_intake(user_id, days_offset):
@@ -94,13 +94,12 @@ class AnalyticsEngine(BaseModel):
                             ingredient_history['count'].append(entry[1])
 
                     df = pd.DataFrame(ingredient_history)
-                    print(df)
                     
         return AnalyticsEngine._generate_chart(df)
 
 
     @staticmethod
-    def _generate_graph(df):
+    def _generate_graph(df, goal):
         fig = plt.figure()
 
         plt.plot(df['date'], df['calories'])
@@ -110,6 +109,13 @@ class AnalyticsEngine(BaseModel):
         max_cal = max(df['calories'])
 
         plt.ylim(-0.05*max_cal, max_cal*1.05)
+
+        plt.axhline(y = goal, color = 'r', linestyle = '-')
+        
+        plt.text(df['date'][2], goal, "Calorie Goal")
+
+        plt.xlabel("Date")
+        plt.ylabel("Calories")
 
         flike = BytesIO()
         fig.savefig(flike)
@@ -124,7 +130,6 @@ class AnalyticsEngine(BaseModel):
     def _generate_chart(df):
         fig = plt.figure()
         plt.pie(df['count'],labels=df['category'], autopct='%1.1f%%')
-        plt.legend(title="Sources of Calories")
         plt.axis('equal')
         plt.tight_layout()
 

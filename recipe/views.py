@@ -63,8 +63,10 @@ def analytics_home(request):
     request : Django Request object
         Request is assumed to be a GET protocol 
     '''
+    
     if request.user.id is not None:
-        context = settings.ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7)
+        goal = UserAccount.objects.get(user_id=request.user.id).calorie_goal
+        context = settings.ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7, goal)
         context['table'] = settings.ANALYTICS_ENGINE.table_calorie_intake(request.user.id, 7)
         context['chart'] = settings.ANALYTICS_ENGINE.pie_chart_ingredients(request.user.id, 7)
         return render(request, 'recipe/analytics.html', context)
