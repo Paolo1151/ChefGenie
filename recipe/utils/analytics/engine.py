@@ -94,6 +94,8 @@ class AnalyticsEngine(BaseModel):
                     print(df)
                     
         return AnalyticsEngine._generate_chart(df)
+
+
     @staticmethod
     def _generate_graph(df):
         fig = plt.figure()
@@ -114,6 +116,7 @@ class AnalyticsEngine(BaseModel):
 
         return {'graph': b64}
 
+
     @staticmethod
     def _generate_chart(df):
         fig = plt.figure()
@@ -128,7 +131,7 @@ class AnalyticsEngine(BaseModel):
 
         plt.close(fig)
 
-        return {'chart': b64}
+        return b64
 
     @staticmethod
     def _generate_table(df):
