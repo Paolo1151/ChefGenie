@@ -23,6 +23,7 @@ FROM
 ) m
 WHERE
     m.user_id = [USERID]
+    
 GROUP BY
     m.category
 ORDER BY

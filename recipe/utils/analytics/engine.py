@@ -87,8 +87,11 @@ class AnalyticsEngine(BaseModel):
 
                     ingredient_history = {'category': [], 'count': [], }
                     for entry in curs:
-                        ingredient_history['category'].append(entry[0])
-                        ingredient_history['count'].append(entry[1])
+                        if entry[0] == 'condiment' or entry[0] == 'spices' or entry[0] == 'miscellaneous' or entry[0] == 'herb':
+                            continue
+                        else: 
+                            ingredient_history['category'].append(entry[0])
+                            ingredient_history['count'].append(entry[1])
 
                     df = pd.DataFrame(ingredient_history)
                     print(df)
