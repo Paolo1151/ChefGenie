@@ -5,6 +5,7 @@ from .models import Mealmade
 from .models import UserPantry
 from .models import Ingredient
 from .models import Recipe
+from .models import Requirement
 
 class SearchForm(forms.Form):
     search_term = forms.CharField(label='Search Term')
@@ -27,7 +28,31 @@ class AddIngredientForm(forms.ModelForm):
         model = UserPantry
         fields = ['ingredient', 'amount']
 
-class AddRecipeForm(forms.ModelForm):
+class AddRecipeNameForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['name', 'tags', 'ingredients', 'steps']
+        fields = ['name', 'tags']
+    
+    def __init__(self, *args, **kwargs):
+        super(AddRecipeNameForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs = {'placeholder': 'recipe name', 'class': 'input_field'}
+        self.fields['tags'].widget.attrs = {'placeholder': 'tags', 'class': 'input_field'}
+
+class AddRequirementForm(forms.ModelForm):
+    class Meta:
+        model = Requirement
+        fields = ['ingredient', 'required_amount']
+    
+    def __init__(self, *args, **kwargs):
+        super(AddRequirementForm, self).__init__(*args, **kwargs)
+        self.fields['ingredient'].widget.attrs = {'placeholder': 'ingredient', 'class': 'input_field'}
+        self.fields['required_amount'].widget.attrs = {'placeholder': 'amount', 'class': 'input_field'}
+
+class AddStepsForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['steps']
+    
+    def __init__(self, *args, **kwargs):
+        super(AddStepsForm, self).__init__(*args, **kwargs)
+        self.fields['steps'].widget.attrs = {'placeholder': 'enter steps separated by \'|\'', 'class': 'input_field'}

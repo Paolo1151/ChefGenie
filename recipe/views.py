@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import reverse
 from django.shortcuts import redirect
 
+from django.http import HttpResponse
+
 from django.conf import settings
 
 from django.contrib import messages
@@ -10,7 +12,9 @@ from .forms import SearchForm
 from .forms import ReviewForm
 from .forms import MealmadeForm
 from .forms import AddIngredientForm
-from .forms import AddRecipeForm
+from .forms import AddRecipeNameForm
+from .forms import AddRequirementForm
+from .forms import AddStepsForm
 
 from .models import Recipe
 from .models import Requirement
@@ -24,7 +28,6 @@ from login.models import UserAccount
 from .utils import search
 from .utils.search.config import SearchConfig
 from .utils import analytics
-
 
 def recipe_home(request):
     '''
@@ -274,22 +277,62 @@ def pantry_quantity_add(request, id):
     return redirect('pantry_home')
 
 def recipe_add(request):
-    if request.method == 'POST':
-        form = AddRecipeForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            tags = form.cleaned_data['tags']
-            ingredients = form.cleaned_data['ingredients']
-            steps = form.cleaned_data['steps']
-            recipe = Recipe.objects.create(name=name, tags=tags, steps=steps)
-            # recipe.ingredients.set(ingredients)
-            recipe.save()
-            return redirect('/recipe')
+    if request.user.id:
+        if request.method == 'POST':
+            form = AddRecipeNameForm(request.POST)
+            requirement_form = AddRequirementForm(request.POST)
+            if form.is_valid():
+                name = form.cleaned_data['name']
+                tags = form.cleaned_data['tags']
+                recipe = Recipe.objects.create(name=name, tags=tags)
+                recipe.save()
+                request.session['recipe_id'] = recipe.id
+                return redirect('/recipe/add2')
+            else:
+                    message = 'Details incomplete'
         else:
-                message = 'Details incomplete'
+            message = ''
+            form = AddRecipeNameForm()
+            requirement_form = AddRequirementForm()
+        context = {'message': message, 'form': form}
+        return render(request, 'recipe/recipeadd.html', context)
     else:
-        message = ''
-        form = AddRecipeForm()
+        return redirect('login')
 
-    context = {'message': message, 'form': form}
-    return render(request, 'recipe/recipeadd.html', context)
+def recipe_add2(request):
+    if request.session['recipe_id'] is not None:
+        if request.method == 'POST':
+            form = AddRequirementForm(request.POST)
+            if form.is_valid():
+                ingredient = form.cleaned_data['ingredient']
+                required_amount = form.cleaned_data['required_amount']
+                recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                requirement = Requirement.objects.create(recipe=recipe, ingredient=ingredient, required_amount=required_amount)
+                requirement.save()
+                return redirect('/recipe/add2')
+        else:
+            form = AddRequirementForm()
+        message = ''
+        context = {'message': message, 'required_form': form}
+        return render(request, 'recipe/recipeadd.html', context)
+    else:
+        return redirect('/recipe/add')
+
+def recipe_add3(request):
+    if request.session['recipe_id'] is not None:
+        if request.method == 'POST':
+            form = AddStepsForm(request.POST)
+            if form.is_valid():
+                steps = form.cleaned_data['steps']
+                recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                recipe.steps = steps
+                recipe.save()
+                request.session['recipe_id'] = None
+                return redirect('/recipe')
+        else:
+            form = AddStepsForm()
+        message = ''
+        context = {'message': message, 'steps_form': form}
+        return render(request, 'recipe/recipeadd.html', context)
+    else:
+        return redirect('/recipe/add')
