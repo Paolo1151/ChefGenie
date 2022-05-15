@@ -46,4 +46,3 @@ class Mealmade(models.Model):
 class UserPantry(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    amount = models.FloatField()

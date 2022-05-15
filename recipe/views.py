@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.conf import settings
 
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from .forms import SearchForm
 from .forms import ReviewForm
@@ -29,6 +30,27 @@ from .utils import search
 from .utils.search.config import SearchConfig
 from .utils import analytics
 
+<<<<<<< HEAD
+=======
+
+def home(request, recom_type):
+    recomms = settings.RECOM_ENGINE.generate_recommendations(5, recom_type, request.user.id)
+
+    user = UserAccount.objects.get(user_id=request.user.id)
+    context = {
+        'account': get_user_model().objects.get(id=request.user.id),
+        'user': user,
+        'weightGoalMet': user.weight == user.weight_goal,
+        'weightBelowGoal': user.weight < user.weight_goal,
+        'weightDifference': abs(user.weight_goal - user.weight),
+        'calories_consumed': user.calorie_goal - settings.SEARCH_ENGINE.calculate_calorie_goal(user),
+        'recommendations': recomms,
+        'recom_type': recom_type
+    }
+    return render(request, 'home/home.html', context)
+
+
+>>>>>>> 499200f532671b5779fa824d32b2b741be51e9a7
 def recipe_home(request):
     '''
     Render the Home page of the Recipes HTML
@@ -230,7 +252,6 @@ def pantry_add(request):
         new_ingr = UserPantry(
             ingredient=form.cleaned_data['ingredient'],
             user=request.user,
-            amount=form.cleaned_data['amount']
         )
         new_ingr.save()
     return redirect('pantry_home')
@@ -255,26 +276,6 @@ def pantry_delete(request, id):
     to_delete_obj.delete()
     return redirect('pantry_home')
 
-
-def pantry_quantity_add(request, id):
-    '''
-	Defines the Deletion of a specific pantry entity
-
-	Parameters
-	----------
-	request: Django.request 
-		a request object from django
-	id : int
-		the id of the object concerned
-
-	Returns
-	----------
-	a redirect to the gallery view
-	'''
-    to_update = UserPantry.objects.get(id=id)
-    to_update.amount += 1
-    to_update.save()
-    return redirect('pantry_home')
 
 def recipe_add(request):
     if request.user.id:
@@ -318,6 +319,7 @@ def recipe_add2(request):
     else:
         return redirect('/recipe/add')
 
+<<<<<<< HEAD
 def recipe_add3(request):
     if request.session['recipe_id'] is not None:
         if request.method == 'POST':
@@ -336,3 +338,7 @@ def recipe_add3(request):
         return render(request, 'recipe/recipeadd.html', context)
     else:
         return redirect('/recipe/add')
+=======
+    context = {'message': message, 'form': form}
+    return render(request, 'recipe/recipeadd.html', context)
+>>>>>>> 499200f532671b5779fa824d32b2b741be51e9a7

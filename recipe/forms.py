@@ -26,7 +26,7 @@ class MealmadeForm(forms.ModelForm):
 class AddIngredientForm(forms.ModelForm):
     class Meta:
         model = UserPantry
-        fields = ['ingredient', 'amount']
+        fields = ['ingredient']
 
 class AddRecipeNameForm(forms.ModelForm):
     class Meta:
