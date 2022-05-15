@@ -269,26 +269,6 @@ def pantry_delete(request, id):
     to_delete_obj.delete()
     return redirect('pantry_home')
 
-'''
-# def pantry_quantity_add(request, id):
-
-# 	Defines the Deletion of a specific pantry entity
-
-# 	Parameters
-# 	----------
-# 	request: Django.request 
-# 		a request object from django
-# 	id : int
-# 		the id of the object concerned
-
-	Returns
-	----------
-	a redirect to the gallery view
-
-    to_update = UserPantry.objects.get(id=id)
-    to_update.amount += 1
-    to_update.save()
-    return redirect('pantry_home')
 
 def recipe_add(request):
     if request.method == 'POST':
@@ -310,11 +290,3 @@ def recipe_add(request):
 
     context = {'message': message, 'form': form}
     return render(request, 'recipe/recipeadd.html', context)
-# 	Returns
-# 	----------
-# 	a redirect to the gallery view
-# 	'''
-#     to_update = UserPantry.objects.get(id=id)
-#     to_update.amount += 1
-#     to_update.save()
-#     return redirect('pantry_home')
