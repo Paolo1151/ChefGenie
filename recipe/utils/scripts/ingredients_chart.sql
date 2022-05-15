@@ -1,6 +1,7 @@
 SELECT
     m.category,
-    count(m.category) as count
+    count(m.category) as count,
+    m.date
 FROM
 (
     SELECT 
@@ -25,6 +26,7 @@ WHERE
     m.user_id = [USERID]
     
 GROUP BY
-    m.category
+    m.category,
+    m.date
 ORDER BY
     m.category
