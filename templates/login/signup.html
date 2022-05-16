@@ -23,6 +23,7 @@
 <center>
     <div class="form-div">
         <form class="form" method="post">
+            <h1 style="font-size:3.1rem;"> Welcome to Chef Genie!</h1>
             {% csrf_token %} {% if message != '' %}
             <h2>{{ message }}</h2>
             {% endif %}
