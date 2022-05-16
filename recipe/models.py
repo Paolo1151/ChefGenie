@@ -9,7 +9,7 @@ class Ingredient(models.Model):
     category = models.CharField(max_length=100, default="")
 
     def __str__(self):
-        return self.name
+        return self.name + " (" + self.unit + ")"
 
 class Recipe(models.Model):
     name = models.CharField(max_length=150)
