@@ -115,7 +115,7 @@ button a {
 }
 
 .filter_options_enable:hover,
-button:hover {
+button:hover, .button:hover {
     color: white;
     background-color: #b98760;
 }
@@ -350,6 +350,14 @@ hr {
     max-width: 100%;
     background-position: 50%;
     box-sizing: border-box;
+}
+
+.recipe-results > a:link {
+    color: #DF8441;
+}
+
+.recipe-results > a:visited {
+    color: #A85313;
 }
 
 .recipes-hr {
