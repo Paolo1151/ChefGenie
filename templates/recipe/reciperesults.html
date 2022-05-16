@@ -1,4 +1,12 @@
 {% extends 'base.html' %} {% block content %}
+<style>
+    .add_recipe_button{
+        bottom: 8px;
+        right: 16px;
+        position: fixed;
+    }
+</style>
+
 <nav>
     <ul>
         <a href="/home/new"><img src="/static/pictures/ChefGenieLogo.png" style="height:100px; width: auto; margin-top: -17.5px; margin-left: -17.5px;"></a>
@@ -62,4 +70,6 @@
     </div>
     <!-- More Descriptors to be added in the future -->
 </article>
-{% endfor %} {% endif %} {% endblock content %}
+{% endfor %} {% endif %} 
+<button onclick="location.href='/recipe/add'" href="recipe/add" class="add_recipe_button">add recipe</button><br>
+{% endblock content %}
