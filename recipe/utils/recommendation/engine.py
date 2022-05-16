@@ -115,22 +115,17 @@ class RecommendationEngine(RecipeModel):
                 A List of N Recipies from most recommended to least recommended
         '''
         recommendations = []
-
         if recommendation_type == 'new':
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
                 with conn.cursor() as curs:
                     with open(self.new_path) as q:
                         template = q.read()
                         template = template.replace('[USERID]', str(user_id))
-
                         curs.execute(template)
-
                         for row in curs:
                             recommendations.append((row[0], row[1]))
-
                         if len(recommendations) > n:
                             recommendations = random.sample(recommendations, k=n)
-
         elif recommendation_type == 'category':
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
                 with conn.cursor() as curs:
@@ -140,11 +135,8 @@ class RecommendationEngine(RecipeModel):
                         curs.execute(template)
                         for row in curs:
                             recommendations.append((row[0], row[1]))
-
                         if len(recommendations) > n:
                             recommendations = random.sample(recommendations, k=n)
-                        
-
         elif recommendation_type == 'review':
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
                 with conn.cursor() as curs:
