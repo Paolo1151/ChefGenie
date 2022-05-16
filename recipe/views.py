@@ -158,18 +158,13 @@ def make_recipe(request, pk):
     if request.method == 'POST':
         form = MealmadeForm(request.POST)
         if form.is_valid():
-            missing, to_update = settings.VALIDATOR.validate(pk, form.cleaned_data['amount'])
+            missing, to_update = settings.VALIDATOR.validate(pk)
             if not missing:
                 consume = Mealmade()
                 consume.recipe_id = recipe_id
                 consume.user_id = request.user.id
                 consume.amount = form.cleaned_data['amount']
                 consume.save()
-
-                for rid, consumed in to_update:
-                    ingredient = UserPantry.objects.get(ingredient__id=rid, user__id=request.user.id)
-                    ingredient.amount -= consumed
-                    ingredient.save()
 
                 messages.success(request, 'Thank you! This meal has been added to your history.', extra_tags='meal')
             else:
