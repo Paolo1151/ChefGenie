@@ -36,7 +36,7 @@ class AddRecipeNameForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AddRecipeNameForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs = {'placeholder': 'recipe name', 'class': 'input_field'}
-        self.fields['tags'].widget.attrs = {'placeholder': 'tags', 'class': 'input_field'}
+        self.fields['tags'].widget.attrs = {'placeholder': 'tags (separated by spaces)', 'class': 'input_field'}
 
 class AddRequirementForm(forms.ModelForm):
     class Meta:

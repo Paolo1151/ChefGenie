@@ -9,6 +9,24 @@
         font-size: 56px;
         color: white;
     }
+
+    li {
+        list-style-type: '🍴 ';
+        margin-left: 20px;
+    }
+
+    .button {
+        text-decoration: none;
+        color: white;
+    }
+
+    .recommendations > a:link {
+        color: #DF8441;
+    }
+
+    .recommendations > a:visited {
+        color: #A85313;
+    }
 </style>
 <nav>
     <ul>
@@ -57,7 +75,7 @@
         
         {% if recommendations %}
             {% for id, name in recommendations %}
-                <li><a href="/recipe/{{ id }}">{{ name }}</a></li>
+                <li class="recommendations"><a href="/recipe/{{ id }}">{{ name }}</a></li>
             {% endfor %}
         {% else %}
             We have no recommendations for you at this moment.
@@ -65,11 +83,11 @@
 
         <br>
         <br>
-        <a href="/home/new">Untouched Recommendations</a>
+        <a href="/home/new" class="button">Untouched Recommendations</a>
         <br>
-        <a href="/home/category">History Recommendations</a>
+        <a href="/home/category" class="button">History Recommendations</a>
         <br>
-        <a href="/home/review">Review Recommendations</a>
+        <a href="/home/review" class="button">Review Recommendations</a>
         <br>
     </article>
 </div>

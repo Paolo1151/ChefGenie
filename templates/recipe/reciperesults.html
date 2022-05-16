@@ -39,7 +39,7 @@
 {% for recipe in request.session.result_goal %}
 <article>
     <header>
-        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+        <h1 class="recipe-results"><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
     </header>
 
     <div class="tags">
@@ -60,7 +60,7 @@
 {% for recipe in request.session.result_other %}
 <article>
     <header>
-        <h1><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
+        <h1 class="recipe-results"><a href="{% url 'recipe_details' recipe.id %}">{{ recipe.name }}</a></h1>
     </header>
 
     <div class="tags">
