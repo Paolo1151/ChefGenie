@@ -95,7 +95,6 @@ class AnalyticsEngine(BaseModel):
                             ingredient_history['count'].append(entry[1])
 
                     df = pd.DataFrame(ingredient_history)
-                    print(df)
         return AnalyticsEngine._generate_chart(df)
 
 
