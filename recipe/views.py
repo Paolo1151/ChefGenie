@@ -69,6 +69,7 @@ def analytics_home(request):
         context = settings.ANALYTICS_ENGINE.graph_calorie_intake(request.user.id, 7, goal)
         context['table'] = settings.ANALYTICS_ENGINE.table_calorie_intake(request.user.id, 7)
         context['chart'] = settings.ANALYTICS_ENGINE.pie_chart_ingredients(request.user.id, 7)
+        context['table_recent'] = settings.ANALYTICS_ENGINE.table_recent_meals(request.user.id)
         return render(request, 'recipe/analytics.html', context)
     else:
         return redirect('login')

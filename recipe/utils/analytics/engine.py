@@ -97,6 +97,33 @@ class AnalyticsEngine(BaseModel):
                     df = pd.DataFrame(ingredient_history)
         return AnalyticsEngine._generate_chart(df)
 
+    @staticmethod
+    def table_recent_meals(user_id):
+        with psycopg2.connect(BaseModel.get_connection_string()) as conn:
+            with conn.cursor() as curs:
+                with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'five_recent_meals.sql')) as query:
+                    intake_query = query.read()
+                    intake_query = intake_query.replace('[USERID]', str(user_id))
+                    curs.execute(intake_query)
+
+                    meal_history = {'date': [], 'name':[], 'calories': [], }
+                    for entry in curs:
+                        meal_history['date'].append(entry[0])
+                        meal_history['name'].append(entry[1])
+                        meal_history['calories'].append(entry[2])
+                    
+                    if len(meal_history['date']) < 5:
+                        i = 1
+                        difference = 5 - len(meal_history['date']) 
+                        while i != difference:
+                            meal_history['date'].append('NA')
+                            meal_history['name'].append('NA')
+                            meal_history['calories'].append('NA')
+
+                    df = pd.DataFrame(meal_history, columns=['date', 'name', 'calories'])
+                    print(len(meal_history['date']))
+
+        return AnalyticsEngine._generate_table(df) 
 
     @staticmethod
     def _generate_graph(df, goal):
