@@ -83,7 +83,8 @@
     }
     
     .logoutbutton {
-        margin-top: -4.25%;
+        margin-left: 5%;
+        margin-top: -1%;
     }
 </style>
 <nav>
@@ -116,7 +117,7 @@
             </div>
         </div>
     </header>
-
+    
     <form class="form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="profilecontainer">
@@ -144,13 +145,11 @@
         {{ form.profile_picture }} <br> <br>
 
         <button type="submit">Save Changes</button>
-
     </form>
 
-    <form action="{% url 'logout' %}" method="POST">
+    <form action="{% url 'logout' %}" method="POST" class="form" style="height:20px">
         {% csrf_token %}
-        <button type="submit" class="logoutbutton">Logout</button>
-
+        <br><button type="submit" class="logoutbutton">Logout</button>
     </form>
 </article>
 {% endblock content %} {% endif %}
