@@ -32,20 +32,23 @@ from .utils import analytics
 
 
 def home(request, recom_type):
-    recomms = settings.RECOM_ENGINE.generate_recommendations(5, recom_type, request.user.id)
+    if request.user.id is not None:
+        recomms = settings.RECOM_ENGINE.generate_recommendations(5, recom_type, request.user.id)
 
-    user = UserAccount.objects.get(user_id=request.user.id)
-    context = {
-        'account': get_user_model().objects.get(id=request.user.id),
-        'user': user,
-        'weightGoalMet': user.weight == user.weight_goal,
-        'weightBelowGoal': user.weight < user.weight_goal,
-        'weightDifference': abs(user.weight_goal - user.weight),
-        'calories_consumed': user.calorie_goal - settings.SEARCH_ENGINE.calculate_calorie_goal(user),
-        'recommendations': recomms,
-        'recom_type': recom_type
-    }
-    return render(request, 'home/home.html', context)
+        user = UserAccount.objects.get(user_id=request.user.id)
+        context = {
+            'account': get_user_model().objects.get(id=request.user.id),
+            'user': user,
+            'weightGoalMet': user.weight == user.weight_goal,
+            'weightBelowGoal': user.weight < user.weight_goal,
+            'weightDifference': abs(user.weight_goal - user.weight),
+            'calories_consumed': user.calorie_goal - settings.SEARCH_ENGINE.calculate_calorie_goal(user),
+            'recommendations': recomms,
+            'recom_type': recom_type
+        }
+        return render(request, 'home/home.html', context)
+    else:
+        return redirect('login')
 
 
 def recipe_home(request):
