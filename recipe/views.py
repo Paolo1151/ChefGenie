@@ -305,41 +305,47 @@ def recipe_add(request):
         return redirect('login')
 
 def recipe_add2(request):
-    if request.session['recipe_id'] is not None:
-        if request.method == 'POST':
-            form = AddRequirementForm(request.POST)
-            if form.is_valid():
-                ingredient = form.cleaned_data['ingredient']
-                required_amount = form.cleaned_data['required_amount']
-                recipe = Recipe.objects.get(id=request.session['recipe_id'])
-                requirement = Requirement.objects.create(recipe=recipe, ingredient=ingredient, required_amount=required_amount)
-                requirement.save()
-                return redirect('/recipe/add2')
+    if request.user.id:
+        if request.session['recipe_id'] is not None:
+            if request.method == 'POST':
+                form = AddRequirementForm(request.POST)
+                if form.is_valid():
+                    ingredient = form.cleaned_data['ingredient']
+                    required_amount = form.cleaned_data['required_amount']
+                    recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                    requirement = Requirement.objects.create(recipe=recipe, ingredient=ingredient, required_amount=required_amount)
+                    requirement.save()
+                    return redirect('/recipe/add2')
+            else:
+                form = AddRequirementForm()
+            message = ''
+            context = {'message': message, 'required_form': form}
+            return render(request, 'recipe/recipeadd.html', context)
         else:
-            form = AddRequirementForm()
-        message = ''
-        context = {'message': message, 'required_form': form}
-        return render(request, 'recipe/recipeadd.html', context)
+            return redirect('/recipe/add')
     else:
-        return redirect('/recipe/add')
+        return redirect('login')
 
 def recipe_add3(request):
-    if request.session['recipe_id'] is not None:
-        if request.method == 'POST':
-            form = AddStepsForm(request.POST)
-            if form.is_valid():
-                steps = form.cleaned_data['steps']
-                recipe = Recipe.objects.get(id=request.session['recipe_id'])
-                recipe.steps = steps
-                recipe.save()
-                request.session['recipe_id'] = None
-                return redirect('/recipe')
+    if request.user.id:
+        if request.session['recipe_id'] is not None:
+            if request.method == 'POST':
+                form = AddStepsForm(request.POST)
+                if form.is_valid():
+                    steps = form.cleaned_data['steps']
+                    recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                    recipe.steps = steps
+                    recipe.save()
+                    request.session['recipe_id'] = None
+                    return redirect('/recipe')
+            else:
+                form = AddStepsForm()
+            message = ''
+            context = {'message': message, 'steps_form': form}
+            return render(request, 'recipe/recipeadd.html', context)
         else:
-            form = AddStepsForm()
-        message = ''
-        context = {'message': message, 'steps_form': form}
+            return redirect('/recipe/add')
+        context = {'message': message, 'form': form}
         return render(request, 'recipe/recipeadd.html', context)
     else:
-        return redirect('/recipe/add')
-    context = {'message': message, 'form': form}
-    return render(request, 'recipe/recipeadd.html', context)
+        return redirect('login')
