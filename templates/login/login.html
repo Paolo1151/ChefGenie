@@ -2,7 +2,7 @@
 
 <style>
     .form-div {
-        background-color: rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.35);
         border-radius: 10px;
         width: clamp(350px, 50%, 1000px);
     }
@@ -23,9 +23,12 @@
 </nav>
 <center>
     <br>
+
+
     <div class="form-div">
         <form class="form" method="post">
-            {% csrf_token %} {% if message != '' %}
+            <h1 style="font-size:3.1rem;"> Welcome to Chef Genie!</h1>
+            <hr style="border-top:2px solid white;"> {% csrf_token %} {% if message != '' %}
             <h2>{{ message }}</h2>
             {% endif %}
 
