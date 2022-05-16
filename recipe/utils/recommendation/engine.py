@@ -137,29 +137,29 @@ class RecommendationEngine(RecipeModel):
                     with open(self.cat_path) as q:
                         template = q.read()
                         template = template.replace('[USERID]', str(user_id))
-
                         curs.execute(template)
-
                         for row in curs:
                             recommendations.append((row[0], row[1]))
 
-                        recommendations = random.sample(recommendations, k=n)
+                        if len(recommendations) > n:
+                            recommendations = random.sample(recommendations, k=n)
+                        
 
         elif recommendation_type == 'review':
-            self.fill_pool()
             with psycopg2.connect(RecommendationEngine.get_connection_string()) as conn:
                 with conn.cursor() as curs:
                     with open(self.rev_path) as q:
                         template = q.read()
                         template = template.replace('[USERID]', str(user_id))
-
                         curs.execute(template)
-
                         top3 = []
                         top3_id = []
                         for row in curs:
                             top3_id.append(row[0])
                             top3.append(row[1])
+
+                        if len(top3) > 0:
+                            self.fill_pool()
 
                         for recipe in self.recipes:
                             if recipe.id in top3_id:

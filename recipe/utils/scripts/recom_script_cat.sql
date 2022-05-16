@@ -23,7 +23,7 @@ where
 					left join recipe_requirement rr on rr.recipe_id = rm.recipe_id 
 					left join recipe_ingredient ri on ri.id = rr.ingredient_id
 				where
-					rm.user_id = 1
+					rm.user_id = [USERID]
 					and ri.category not in ('condiment', 'herb', 'miscellaneous')
 				group by
 					ri.category,
