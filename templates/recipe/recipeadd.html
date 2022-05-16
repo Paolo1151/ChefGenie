@@ -15,15 +15,17 @@
         <h2>{{ message }}</h2>
         {% endif %}
 
-        <h1>Create Recipe</h1>
         {% if form %}
+            <h1>Create Recipe</h1>
             {{ form.name }} <br> <br>
             {{ form.tags }} <br> <br>
         {% elif required_form %}
+            <h1>Enter Ingredients</h1>
             {{ required_form.ingredient }} <br><br>
             {{ required_form.required_amount }} <br><br>
             <button onclick="location.href='/recipe/add3'" href="recipe/add3">next</button>
         {% elif steps_form %}
+            <h1>Enter Preparation Steps</h1>
             {{ steps_form.steps }} <br><br>
         {% endif %}
 
