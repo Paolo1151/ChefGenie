@@ -28,6 +28,10 @@ class AddIngredientForm(forms.ModelForm):
         model = UserPantry
         fields = ['ingredient']
 
+    def __init__(self, *args, **kwargs):
+        super(AddIngredientForm, self).__init__(*args, **kwargs)
+        self.fields['ingredient'].widget.attrs = {'class': 'ingredient_input_field'}
+
 class AddRecipeNameForm(forms.ModelForm):
     class Meta:
         model = Recipe
