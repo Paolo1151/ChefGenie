@@ -158,7 +158,7 @@ def make_recipe(request, pk):
     if request.method == 'POST':
         form = MealmadeForm(request.POST)
         if form.is_valid():
-            missing, to_update = settings.VALIDATOR.validate(pk, form.cleaned_data['amount'])
+            missing, to_update = settings.VALIDATOR.validate(pk)
             if not missing:
                 consume = Mealmade()
                 consume.recipe_id = recipe_id
