@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import reverse
 from django.shortcuts import redirect
 
+from django.http import HttpResponse
+
 from django.conf import settings
 
 from django.contrib import messages
@@ -11,6 +13,9 @@ from .forms import SearchForm
 from .forms import ReviewForm
 from .forms import MealmadeForm
 from .forms import AddIngredientForm
+from .forms import AddRecipeNameForm
+from .forms import AddRequirementForm
+from .forms import AddStepsForm
 
 from .models import Recipe
 from .models import Requirement
@@ -272,22 +277,65 @@ def pantry_delete(request, id):
     return redirect('pantry_home')
 
 
-# def pantry_quantity_add(request, id):
-#     '''
-# 	Defines the Deletion of a specific pantry entity
+def recipe_add(request):
+    if request.user.id:
+        if request.method == 'POST':
+            form = AddRecipeNameForm(request.POST)
+            requirement_form = AddRequirementForm(request.POST)
+            if form.is_valid():
+                name = form.cleaned_data['name']
+                tags = form.cleaned_data['tags']
+                recipe = Recipe.objects.create(name=name, tags=tags)
+                recipe.save()
+                request.session['recipe_id'] = recipe.id
+                return redirect('/recipe/add2')
+            else:
+                    message = 'Details incomplete'
+        else:
+            message = ''
+            form = AddRecipeNameForm()
+            requirement_form = AddRequirementForm()
+        context = {'message': message, 'form': form}
+        return render(request, 'recipe/recipeadd.html', context)
+    else:
+        return redirect('login')
 
-# 	Parameters
-# 	----------
-# 	request: Django.request 
-# 		a request object from django
-# 	id : int
-# 		the id of the object concerned
+def recipe_add2(request):
+    if request.session['recipe_id'] is not None:
+        if request.method == 'POST':
+            form = AddRequirementForm(request.POST)
+            if form.is_valid():
+                ingredient = form.cleaned_data['ingredient']
+                required_amount = form.cleaned_data['required_amount']
+                recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                requirement = Requirement.objects.create(recipe=recipe, ingredient=ingredient, required_amount=required_amount)
+                requirement.save()
+                return redirect('/recipe/add2')
+        else:
+            form = AddRequirementForm()
+        message = ''
+        context = {'message': message, 'required_form': form}
+        return render(request, 'recipe/recipeadd.html', context)
+    else:
+        return redirect('/recipe/add')
 
-# 	Returns
-# 	----------
-# 	a redirect to the gallery view
-# 	'''
-#     to_update = UserPantry.objects.get(id=id)
-#     to_update.amount += 1
-#     to_update.save()
-#     return redirect('pantry_home')
+def recipe_add3(request):
+    if request.session['recipe_id'] is not None:
+        if request.method == 'POST':
+            form = AddStepsForm(request.POST)
+            if form.is_valid():
+                steps = form.cleaned_data['steps']
+                recipe = Recipe.objects.get(id=request.session['recipe_id'])
+                recipe.steps = steps
+                recipe.save()
+                request.session['recipe_id'] = None
+                return redirect('/recipe')
+        else:
+            form = AddStepsForm()
+        message = ''
+        context = {'message': message, 'steps_form': form}
+        return render(request, 'recipe/recipeadd.html', context)
+    else:
+        return redirect('/recipe/add')
+    context = {'message': message, 'form': form}
+    return render(request, 'recipe/recipeadd.html', context)
