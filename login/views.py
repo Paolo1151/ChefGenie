@@ -40,7 +40,7 @@ def login_view(request):
 
         if user is not None:
             auth.login(request, user)
-            return redirect('account')
+            return redirect('/home/new')
         else:
             message = 'invalid username or password'
     elif request.user.id:
