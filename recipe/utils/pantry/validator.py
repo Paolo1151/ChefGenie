@@ -8,14 +8,14 @@ class RequirementValidator(BaseModel):
         super().__init__('Requirement Validator v1')
 
     @staticmethod
-    def validate(recipe_id, amount):
+    def validate(recipe_id):
         requirements_needed = []
         ingredients_to_update = []
         with psycopg2.connect(RequirementValidator.get_connection_string()) as conn:
             with conn.cursor() as curs:
                 with open(os.path.join(os.path.dirname(__file__), '..', 'scripts', 'requirement_check.sql')) as template:
                     query = template.read()
-                    query = query.replace('[AMOUNT_TO_MAKE]', str(amount)).replace('[RECIPE_ID]', str(recipe_id))
+                    query = query.replace('[RECIPE_ID]', str(recipe_id))
 
                     curs.execute(query)
 

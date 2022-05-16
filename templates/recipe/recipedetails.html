@@ -37,7 +37,7 @@
     {% if messages %} {% for message in messages %} {% if message.extra_tags == 'meal' %}
     <div id="message_non_expire">
         {{ message }} {% if message.level == 30 %} {% for req_info in request.session.requirements %}
-        <li>{{ req_info.name }} - {{ req_info.amount_missing }} {{ req_info.unit }}</li>
+        <li>{{ req_info.name }}</li>
         {% endfor %} {% endif %}
     </div>
     {% endif %} {% endfor %} {% endif %}

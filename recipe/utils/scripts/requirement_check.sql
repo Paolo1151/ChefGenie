@@ -2,10 +2,10 @@ select
 	rr2.name,
 	ri.id,
 	ri.name,
-	rr.required_amount * [AMOUNT_TO_MAKE] as amount,
+	(rr.required_amount / rr.required_amount) as amount,
 	ri.unit,
-	case when ru.ingredient_id is null then 0 else ru.amount end as pantry_amount,
-	((case when ru.ingredient_id is null then 0 else ru.amount end) - (rr.required_amount * [AMOUNT_TO_MAKE])) as difference 
+	case when ru.ingredient_id is null then 0 else 1 end as pantry_amount,
+	((case when ru.ingredient_id is null then 0 else 1 end) - (rr.required_amount / rr.required_amount)) as difference 
 from
 	recipe_requirement rr
 	inner join recipe_recipe rr2 on rr2.id = rr.recipe_id
