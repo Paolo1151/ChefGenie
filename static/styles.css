@@ -95,6 +95,20 @@ hr {
     text-align: center;
 }
 
+.ingredient_input_field {
+    width: 86%;
+    padding: 8px 12px;
+    margin: 0 auto;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    font-family: varela;
+    font-size: 1em;
+    text-align: center;
+}
+
 button,
 .button {
     display: inline-block;
