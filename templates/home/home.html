@@ -1,5 +1,4 @@
-{% extends 'base.html' %} 
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <style>
     .home {
         font-size: 20px;
@@ -9,22 +8,22 @@
         font-size: 56px;
         color: white;
     }
-
+    
     li {
         list-style-type: '🍴 ';
         margin-left: 20px;
     }
-
+    
     .button {
         text-decoration: none;
         color: white;
     }
-
-    .recommendations > a:link {
+    
+    .recommendations>a:link {
         color: #DF8441;
     }
-
-    .recommendations > a:visited {
+    
+    .recommendations>a:visited {
         color: #A85313;
     }
 </style>
@@ -43,43 +42,37 @@
 </center>
 <div class="home">
     <article class="calorie-goal">
-        <h3>Calorie Goal</h3>
+        <h2>Calorie Goal</h2>
         <p>You have consumed a total of <b><u>{{ calories_consumed }}</u></b> over {{ user.calorie_goal }} calories for today.</p>
     </article>
     <article class="weight-goal">
-        <h3>Weight Goal</h3>
+        <h2>Weight Goal</h2>
         <p>You currently weigh <b><u>{{ user.weight }}</u> kg</b>.</p>
         {% if weightGoalMet %}
-            <p>Congratulations for achieving your weight goal!</p>
+        <p>Congratulations for achieving your weight goal!</p>
         {% elif weightBelowGoal %}
-            <p>Keep on going! You need to gain <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
+        <p>Keep on going! You need to gain <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
         {% else %}
-            <p>Keep on going! You need to lose <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
+        <p>Keep on going! You need to lose <b>{{ weightDifference }} kg.</b> more to achieve your goal.</p>
         {% endif %}
     </article>
 
-    
+
 
     <article class="you-may-like">
-        <h3>Our Recommendations</h3>
+        <h2>Our Recommendations</h2>
 
         {% if recom_type == 'new' %}
-            <p>These are some recipes you may not have tried.</p>
+        <p>These are some recipes you may not have tried.</p>
         {% elif recom_type == 'category' %}
-            <p>Based on your meal history, you may like to try the following recipes.</p>
+        <p>Based on your meal history, you may like to try the following recipes.</p>
         {% elif recom_type == 'review' %}
-            <p>Based on your reviews, you may like to try the following recipes.</p>
+        <p>Based on your reviews, you may like to try the following recipes.</p>
         {% endif %}
 
-        <hr>
-        
-        {% if recommendations %}
-            {% for id, name in recommendations %}
-                <li class="recommendations"><a href="/recipe/{{ id }}">{{ name }}</a></li>
-            {% endfor %}
-        {% else %}
-            We have no recommendations for you at this moment.
-        {% endif %}
+        <hr> {% if recommendations %} {% for id, name in recommendations %}
+        <li class="recommendations"><a href="/recipe/{{ id }}">{{ name }}</a></li>
+        {% endfor %} {% else %} We have no recommendations for you at this moment. {% endif %}
 
         <br>
         <br>
