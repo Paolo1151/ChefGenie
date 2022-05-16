@@ -32,6 +32,10 @@
             <img src="data:image/png;base64,{{ chart }}" height="500" width="800" style="border:5px solid black;vertical-align:middle; align-content: center;" />
         </div>
     </div>
+    <div class="" style="align-content:center; margin-left: 30%;">
+        <h3 class="h3"> 5 Most Recent Meals Made </h3>
+        {{ table_recent|safe }}
+    </div>
 </article>
 
 {% endblock content %}
