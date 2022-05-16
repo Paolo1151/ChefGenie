@@ -163,6 +163,7 @@ def make_recipe(request, pk):
                 consume = Mealmade()
                 consume.recipe_id = recipe_id
                 consume.user_id = request.user.id
+                consume.amount = form.cleaned_data['amount']
                 consume.save()
 
                 messages.success(request, 'Thank you! This meal has been added to your history.', extra_tags='meal')
