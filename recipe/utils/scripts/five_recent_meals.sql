@@ -25,11 +25,13 @@ FROM
 ) m
 WHERE
     m.user_id = [USERID]
+    AND m.date <= current_date
 GROUP BY
     m.date,
     m.total_calories,
     m.name
 ORDER BY
     m.date DESC
+    
 LIMIT 
     5

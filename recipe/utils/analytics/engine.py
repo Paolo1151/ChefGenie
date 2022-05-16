@@ -113,12 +113,11 @@ class AnalyticsEngine(BaseModel):
                         meal_history['calories'].append(entry[2])
                     
                     if len(meal_history['date']) < 5:
-                        i = 1
                         difference = 5 - len(meal_history['date']) 
-                        while i != difference:
-                            meal_history['date'].append('NA')
-                            meal_history['name'].append('NA')
-                            meal_history['calories'].append('NA')
+                        for a in range(0,difference):
+                            meal_history['date'].append('-')
+                            meal_history['name'].append('-')
+                            meal_history['calories'].append('-')
 
                     df = pd.DataFrame(meal_history, columns=['date', 'name', 'calories'])
                     print(len(meal_history['date']))
