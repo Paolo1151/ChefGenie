@@ -1,5 +1,3 @@
-from heapq import merge
-from turtle import ycor
 from decouple import config
 from io import BytesIO
 from recipe.utils.base.model import BaseModel
