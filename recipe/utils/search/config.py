@@ -9,7 +9,7 @@ class TermFilter(SqlFilter):
         self.term = term.lower()
 
     def to_sql(self):  
-        return self.parse_filter(f"LOWER(tcl.name) LIKE '%{self.term}%' OR LOWER(tcl.tags) LIKE '%{self.term}%' OR LOWER(rr.comment) LIKE '%{self.term}%'")
+        return self.parse_filter(f"(LOWER(tcl.name) LIKE '%{self.term}%' OR LOWER(tcl.tags) LIKE '%{self.term}%')")
 
 
 class CalorieFilter(SqlFilter):
@@ -19,7 +19,7 @@ class CalorieFilter(SqlFilter):
         self.max_calories = max_calories
     
     def to_sql(self):
-        return self.parse_filter(f'Y.total_calories >= {self.min_calories} AND Y.total_calories <= {self.max_calories}')
+        return self.parse_filter(f'(tcl.total_calories >= {self.min_calories} AND tcl.total_calories <= {self.max_calories})')
 
 
 class IngredientFilter(SqlFilter):
@@ -28,7 +28,7 @@ class IngredientFilter(SqlFilter):
         self.ingredient = ingredient.lower()
 
     def to_sql(self):
-        return self.parse_filter(f"LOWER(Z.name) NOT LIKE '%{self.ingredient}%' AND LOWER(Y.tags) NOT LIKE '%{self.ingredient}%'")
+        return self.parse_filter(f"(LOWER(Z.name) NOT LIKE '%{self.ingredient}%' AND LOWER(Y.tags) NOT LIKE '%{self.ingredient}%')")
 
 
 class SearchConfig(BaseObject):
@@ -36,6 +36,7 @@ class SearchConfig(BaseObject):
         super().__init__("Search Config v1")
         self.user = user
         self.filters = []
+        self.ingredient_filters = []
 
     def append_term_filter(self, full_term):
         terms = full_term.split()
@@ -46,7 +47,7 @@ class SearchConfig(BaseObject):
         self.filters.append(CalorieFilter(min_calories, max_calories))
 
     def append_ingredient_filter(self, ingredient):
-        self.filters.append(IngredientFilter(ingredient))
+        self.ingredient_filters.append(IngredientFilter(ingredient))
 
     @staticmethod
     def create_new(request_post, user):
@@ -68,9 +69,9 @@ class SearchConfig(BaseObject):
         return search_config
 
     @staticmethod
-    def apply_filter_to_query(script, search_filter):
+    def apply_filter_to_query(script, search_filter, keyword):
         if search_filter:
-            script = script.replace('[Filters]', '\t' + search_filter.to_sql() + '\n[Filters]')
+            script = script.replace(keyword, '\t' + search_filter.to_sql() + f'\n{keyword}')
             return script
         else:
             return script
@@ -86,8 +87,19 @@ class SearchConfig(BaseObject):
             self.filters[-1].toggle_last()
 
             for sfilter in self.filters:
-                search_query = SearchConfig.apply_filter_to_query(search_query, sfilter)
+                search_query = SearchConfig.apply_filter_to_query(search_query, sfilter, '[Filters]')
+
+
+            if self.ingredient_filters:
+                self.ingredient_filters[-1].toggle_last()
+                search_query = search_query.replace('[INGREDIENT_FILTERS]', 'WHERE\n\t[INGREDIENT_FILTERS]')
+                for ifilter in self.ingredient_filters:
+                    search_query = SearchConfig.apply_filter_to_query(search_query, ifilter, '[INGREDIENT_FILTERS]')
+            
+            search_query = search_query.replace('[INGREDIENT_FILTERS]', '')
 
             search_query = SearchConfig.clean_query(search_query)
+
+            print(search_query)
 
         return search_query

@@ -10,6 +10,7 @@ FROM
     recipe_requirement X
     INNER JOIN recipe_recipe Y ON Y.id = X.recipe_id
     INNER JOIN recipe_ingredient Z ON Z.id = X.ingredient_id
+[INGREDIENT_FILTERS]
 GROUP BY
 	Y.id,
 	Y.name,
@@ -23,7 +24,6 @@ SELECT
     tcl.total_calories
 FROM
     total_calories_lookup tcl
-    LEFT JOIN recipe_recipereview rr on tcl.id = rr.recipe_id
 WHERE
 [Filters]
 
